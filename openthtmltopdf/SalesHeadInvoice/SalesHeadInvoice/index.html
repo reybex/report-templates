@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>${t('salesDocType.isOrder')}</title>
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+      <img src="https://www.duzceteknopark.com/wp-content/uploads/2025/03/reybex-1.png" alt="Test Image" style="height:100px;" />
+
+  <h1>${t('salesDocType.isOrder')}: ${salesHead.marktplace}</h1>
+  <p>${t('date')}: ${salesHead.docDate}</p>
+  <p>${t('customer')}: ${salesHead.customer.name} (${salesHead.customer.customerNo})</p>
+  <p>${t('address')}: ${salesHead.customerAddressline1}, ${salesHead.customerStreet1}, ${salesHead.customerZipStreet} ${salesHead.customerCity}</p>
+  <p>${t('marketplace')}: ${salesHead.marktplace.name}</p>
+  <p>Payment: ${salesHead.paymcond.name}</p>
+  <p>${t('order.description')}: ${salesHead.orderDescription}</p>
+  <p>Subtotal: ${salesHead.subTotal}</p>
+  <p>${t('invoice.tax')}: ${salesHead.taxAmount}</p>
+  <p>${t('total')}: ${salesHead.totalAmount}</p>
+  <p>Intrastat Profile ID: ${salesHead.intrastatProfiles.id}</p>
+  <h2>Items</h2>
+  <table border="1">
+    <tr>
+      <th>${t('salesHead.comparison.pos')}</th>
+      <th>${t('code')}</th>
+      <th>${t('name')}</th>
+      <th>${t('quantity')}</th>
+      <th>${t('price')}</th>
+      <th>${t('total')}</th>
+    </tr>
+    <#list salesHead.items as item>
+      <tr>
+        <td>${item.position}</td>
+        <td>${item.itemCode}</td>
+        <td>${item.material.name}</td>
+        <td>${item.quantity}</td>
+        <td>${item.price}</td>
+        <td>${item.totalAmount}</td>
+      </tr>
+    </#list>
+  </table>
+</body>
+</html>
