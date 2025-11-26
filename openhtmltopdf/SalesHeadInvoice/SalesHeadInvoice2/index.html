@@ -223,49 +223,75 @@
 <body>
 
   <!-- Footer Section -->
-  <div class="footer">
-    <table class="footer-table">
-      <tr>
-        <td class="footer-cell">
-          <div class="footer-info">
-            <div class="footer-item"><span>Bank: ${company.bankName!''}</span></div>
-            <div class="footer-item"><span>IBAN: ${company.iban!''}</span></div>
-            <div class="footer-item"><span>BIC: ${company.bic!''}</span></div>
+<div class="footer">
+  <table class="footer-table">
+    <tr>
+      <td class="footer-cell">
+        <div class="footer-info">
+          <div class="footer-item">
+            <span>Bank: 
+              <#if company.bankName?? && company.bankName?has_content>
+                ${company.bankName}
+              <#else>
+                Deutsche Bank
+              </#if>
+            </span>
           </div>
-        </td>
 
-        <td class="footer-cell">
-          <div class="footer-info">
-            <div class="footer-item"><span>${company.name!''}</span></div>
-            <div class="footer-item"><span>${company.street!''}</span></div>
-            <div class="footer-item"><span>${company.zip!''} ${company.city!''}</span></div>
+          <div class="footer-item">
+            <span>IBAN: 
+              <#if company.iban?? && company.iban?has_content>
+                ${company.iban}
+              <#else>
+                DE00 0000 0000 0000 0000 00
+              </#if>
+            </span>
           </div>
-        </td>
 
-        <td class="footer-cell">
-          <div class="footer-info">
-            <div class="footer-item"><span>Telefon ${company.phone!''}</span></div>
-            <div class="footer-item"><span>E-Mail ${company.email!''}</span></div>
-            <div class="footer-item"><span>Internet ${company.website!''}</span></div>
+          <div class="footer-item">
+            <span>BIC: 
+              <#if company.bic?? && company.bic?has_content>
+                ${company.bic}
+              <#else>
+                DEUTDEDBXXX
+              </#if>
+            </span>
           </div>
-        </td>
+        </div>
+      </td>
 
-        <td class="footer-cell">
-          <div class="footer-info">
-            <div class="footer-item"><span>Geschäftsführer ${company.ceos!''}</span></div>
-            <div class="footer-item"><span>USt-IdNr. ${company.taxNumber!''}</span></div>
-            <div class="footer-item"><span>${company.companyRegister!''}</span></div>
-          </div>
-        </td>
-      </tr>
+      <td class="footer-cell">
+        <div class="footer-info">
+          <div class="footer-item"><span>${company.name!''}</span></div>
+          <div class="footer-item"><span>${company.street!''}</span></div>
+          <div class="footer-item"><span>${company.zip!''} ${company.city!''}</span></div>
+        </div>
+      </td>
 
-      <tr>
-        <td class="footer-cell-bottom" colspan="4">
-          Es gelten unsere allgemeinen Geschäftsbedingungen.
-        </td>
-      </tr>
-    </table>
-  </div>
+      <td class="footer-cell">
+        <div class="footer-info">
+          <div class="footer-item"><span>Telefon ${company.phone!''}</span></div>
+          <div class="footer-item"><span>E-Mail ${company.email!''}</span></div>
+          <div class="footer-item"><span>Internet ${company.website!''}</span></div>
+        </div>
+      </td>
+
+      <td class="footer-cell">
+        <div class="footer-info">
+          <div class="footer-item"><span>Geschäftsführer ${company.ceos!''}</span></div>
+          <div class="footer-item"><span>USt-IdNr. ${company.taxNumber!''}</span></div>
+          <div class="footer-item"><span>${company.companyRegister!''}</span></div>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="footer-cell-bottom" colspan="4">
+        Es gelten unsere allgemeinen Geschäftsbedingungen.
+      </td>
+    </tr>
+  </table>
+</div>
 
 
   <div class="firstpage-header">
