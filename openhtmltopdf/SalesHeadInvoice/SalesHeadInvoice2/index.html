@@ -2,10 +2,8 @@
 <html lang="de">
 
 <head>
-  <meta charset="UTF-8">
-  </meta>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </meta>
+  <meta charset="UTF-8"></meta>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
   <title>Rechnung</title>
   <style>
     tr,
@@ -20,12 +18,10 @@
       }
     }
 
-
     @page {
       @top-center {
         content: element(header);
       }
-
 
       @bottom-center {
         content: element(document-footer);
@@ -36,7 +32,6 @@
 
       size: A4;
       margin: 55mm 15mm 35mm 15mm;
-      /* Üst marjini artırdım */
     }
 
     html,
@@ -65,9 +60,7 @@
       width: 100%;
       border-collapse: collapse;
       margin: 15px 0;
-      /* The magical table pagination property. */
       -fs-table-paginate: paginate;
-      /* Recommended to avoid leaving thead on a page by itself. */
       -fs-page-break-min-height: 1.5cm;
     }
 
@@ -126,12 +119,6 @@
       padding-bottom: 5px;
     }
 
-    .items-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 15px 0;
-    }
-
     .items-table th {
       background-color: #f0f0f0;
       border-bottom: 1px solid #999;
@@ -183,11 +170,9 @@
       clear: both;
     }
 
-    /* Footer Stili - Running Element Approach */
     .footer {
       position: running(document-footer);
       background: #e0e4b4;
-      /* Açık yeşil ton */
       page-break-inside: avoid;
       width: 100%;
       padding: 5px 0;
@@ -205,33 +190,12 @@
       vertical-align: top;
     }
 
-    .footer-cell-bank,
-    .footer-cell-address,
-    .footer-cell-contact,
-    .footer-cell-legal {
-      width: 25%;
-    }
-
-    .footer-cell-legal {
-      border-right: none;
-    }
-
-    .footer-info {
-      font-size: 9px;
-      color: #333;
-    }
-
-    .footer-item {
-      margin-bottom: 3px;
-    }
-
     .footer-cell-bottom {
       text-align: center;
       font-size: 9px;
       padding-top: 6px;
     }
 
-    /* İlk sayfa logosu */
     .firstpage-header {
       position: running(firstpage-header);
       text-align: center;
@@ -258,50 +222,45 @@
 
 <body>
 
-  <!-- Footer Section - Moved to top for running element -->
+  <!-- Footer Section -->
   <div class="footer">
     <table class="footer-table">
       <tr>
-        <!-- Banka Bilgisi -->
-        <td class="footer-cell footer-cell-bank">
+        <td class="footer-cell">
           <div class="footer-info">
-            <div class="footer-item"><span>Bank: Deutsche Bank</span></div>
-            <div class="footer-item"><span>IBAN: DE00 0000 0000 0000</span></div>
-            <div class="footer-item"><span>BIC: DEUTDEDBXXX</span></div>
+            <div class="footer-item"><span>Bank: ${company.bankName!''}</span></div>
+            <div class="footer-item"><span>IBAN: ${company.iban!''}</span></div>
+            <div class="footer-item"><span>BIC: ${company.bic!''}</span></div>
           </div>
         </td>
 
-        <!-- Adres -->
-        <td class="footer-cell footer-cell-address">
+        <td class="footer-cell">
           <div class="footer-info">
-            <div class="footer-item"><span class="footer-value">von Heesen GmbH</span></div>
-            <div class="footer-item"><span class="footer-value">Eversgerdweg 64</span></div>
-            <div class="footer-item"><span class="footer-value">D-33332 Gütersloh</span></div>
+            <div class="footer-item"><span>${company.name!''}</span></div>
+            <div class="footer-item"><span>${company.street!''}</span></div>
+            <div class="footer-item"><span>${company.zip!''} ${company.city!''}</span></div>
           </div>
         </td>
 
-        <!-- İletişim -->
-        <td class="footer-cell footer-cell-contact">
+        <td class="footer-cell">
           <div class="footer-info">
-            <div class="footer-item"><span class="footer-value">Telefon +49-5241-9052814</span></div>
-            <div class="footer-item"><span class="footer-value">E-Mail service@von-heesen.com</span></div>
-            <div class="footer-item"><span class="footer-value">Internet www.von-heesen.com</span></div>
+            <div class="footer-item"><span>Telefon ${company.phone!''}</span></div>
+            <div class="footer-item"><span>E-Mail ${company.email!''}</span></div>
+            <div class="footer-item"><span>Internet ${company.website!''}</span></div>
           </div>
         </td>
 
-        <!-- Yasal -->
-        <td class="footer-cell footer-cell-legal">
+        <td class="footer-cell">
           <div class="footer-info">
-            <div class="footer-item"><span class="footer-value">Geschäftsführer Thomas Scheler</span></div>
-            <div class="footer-item"><span class="footer-value">USt-IdNr. DE301945647</span></div>
-            <div class="footer-item"><span class="footer-value">AG Gütersloh • HRB 10166</span></div>
+            <div class="footer-item"><span>Geschäftsführer ${company.ceos!''}</span></div>
+            <div class="footer-item"><span>USt-IdNr. ${company.taxNumber!''}</span></div>
+            <div class="footer-item"><span>${company.companyRegister!''}</span></div>
           </div>
         </td>
       </tr>
 
-      <!-- 2. satır -->
       <tr>
-        <td class="footer-cell footer-cell-bottom" colspan="4">
+        <td class="footer-cell-bottom" colspan="4">
           Es gelten unsere allgemeinen Geschäftsbedingungen.
         </td>
       </tr>
@@ -309,14 +268,14 @@
   </div>
 
 
-  <!-- İlk sayfa için logo + header -->
   <div class="firstpage-header">
     <img src="${company.urlPreview!''}" alt="Company Logo" />
 
-    <!-- Aynı header içeriği -->
     <table class="header-row">
       <tr>
-        <td class="sender">von Heesen GmbH · Thomas Scheler · Eversgerdweg 64 · D-33332 Gütersloh</td>
+        <td class="sender">
+          ${company.name!''} · ${company.ceos!''} · ${company.street!''} · ${company.zip!''} ${company.city!''}
+        </td>
       </tr>
     </table>
 
@@ -324,13 +283,48 @@
       <tr>
         <td class="customer-info">
           <p>
-            ${customer.translatedName!''} <br />
+            ${customer.translatedName!''}<br />
             ${customerAddressline1!''}<br />
             ${customerStreet1!''}<br />
             ${customerZipStreet!''} ${customerCity!''}
           </p>
         </td>
       </tr>
+
+      <tr>
+        <td>
+          <div class="auftrag-box">
+            <div class="auftrag-title">Rechnung</div>
+            <table style="width: 100%;">
+              <tr>
+                <td style="width: 40%;">Verkaufsbeleg Nr.</td>
+                <td style="width: 30%;">Datum</td>
+                <td style="width: 30%;">Kunden-Nr.</td>
+              </tr>
+              <tr>
+                <td class="strong">${salesHead.docNumber}</td>
+                <td class="strong">${salesHead.docDate}</td>
+                <td class="strong">${salesHead.customer.customerNo}</td>
+              </tr>
+              <tr>
+                <td>Ref-Nr.: ${salesHead.refnr!''}</td>
+                <td colspan="2">Ref-Datum: ${salesHead.refdatum!''}</td>
+              </tr>
+            </table>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <div class="page-number"></div>
+      </tr>
+    </table>
+  </div>
+
+
+  <!-- Running header for next pages -->
+  <div class="running-header">
+    <table class="header-content">
       <tr>
         <td>
           <div class="auftrag-box">
@@ -361,42 +355,7 @@
   </div>
 
 
-  <!-- Sonraki sayfalar için yalnızca header -->
-  <div class="running-header">
-    <table class="header-content">
-      <tr>
-        <td>
-          <div class="auftrag-box">
-            <div class="auftrag-title">Rechnung</div>
-            <table style="width: 100%;">
-              <tr>
-                <td style="width: 40%;">Verkaufsbeleg Nr.</td>
-                <td style="width: 30%;">Datum</td>
-                <td style="width: 30%;">Kunden-Nr.</td>
-              </tr>
-              <tr>
-                <td class="strong">${salesHead.docNumber}</td>
-                <td class="strong">${salesHead.docDate}</td>
-                <td class="strong">${salesHead.customer.customerNo}</td>
-              </tr>
-              <tr>
-                <td>Ref-Nr.: ${refnr!''}</td>
-                <td colspan="2">Ref-Datum: ${refdatum!''}</td>
-              </tr>
-            </table>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <div class="page-number"></div>
-      </tr>
-    </table>
-  </div>
-
-
-  <!-- Ana Content -->
   <div class="content-area">
-    <!-- Items Table -->
     <table class="items-table">
       <thead>
         <tr>
@@ -416,7 +375,9 @@
             <td>
               ${item.material.name}
               <#if item.longDescription?? && item.longDescription?has_content>
-                <br></br><span class="notice">${item.longDescription?replace("<[^>]*>", "", "r")}</span>
+                <br /><span class="notice">
+                  ${item.longDescription?replace("<[^>]*>", "", "r")}
+                </span>
               </#if>
             </td>
             <td>${item.quantity?string("0.##")}</td>
@@ -427,32 +388,34 @@
       </tbody>
     </table>
 
-    <!-- Total Box -->
     <div class="total-box strong">
       <div class="total-row" style="border-bottom: 1px solid #000;">
         <div class="total-label">Netto-Warenwert</div>
         <div class="total-value">${salesHead.subTotal} ${salesHead.currency.symbol!''}</div>
       </div>
+
       <div class="total-row">
         <div class="total-label">Nettosumme</div>
         <div class="total-value">${salesHead.subTotal} ${salesHead.currency.symbol!''}</div>
       </div>
+
       <div class="total-row">
         <div class="total-label">Umsatzsteuer 20%</div>
         <div class="total-value">${salesHead.taxAmount} ${salesHead.currency.symbol!''}</div>
       </div>
+
       <div class="total-row">
         <div class="total-label">Betrag inkl. MwSt.</div>
         <div class="total-value">${salesHead.totalAmount} ${salesHead.currency.symbol!''}</div>
       </div>
     </div>
 
-    <!-- Payment Information -->
     <div style="margin-top: 30px;">
       <p>Zahlungsart : ${salesHead.paymcond.translatedName!''}</p>
       <p>Die Rechnung zu dieser Sendung erhalten Sie von Otto.</p>
     </div>
   </div>
+
 </body>
 
 </html>
