@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Incoming Goods Label – Full Data</title>
+  <style>
+    @page {
+      size: 51mm 32mm;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      font-size: 5.5px;
+      line-height: 1.2;
+      color: #1a1a1a;
+    }
+
+    .label-container {
+      width: 51mm;
+      height: 32mm;
+      margin: 0;
+      padding: 1.2mm;
+      page-break-after: always;
+      page-break-inside: avoid;
+      display: block;
+      position: relative;
+      border: 0.25mm solid #333;
+      background: #fff;
+    }
+
+    .label-container:last-child {
+      page-break-after: auto;
+    }
+
+    .label-header {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1mm;
+      gap: 1.5mm;
+    }
+
+    .barcode-block {
+      flex-shrink: 0;
+      width: 22mm;
+      text-align: center;
+      line-height: 0;
+    }
+
+    .barcode-image {
+      max-width: 20mm;
+      max-height: 6mm;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .identity-block {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .product-name {
+      font-weight: 700;
+      font-size: 6px;
+      margin-bottom: 0.3mm;
+      word-break: break-word;
+    }
+
+    .codes-line {
+      font-size: 5px;
+      color: #444;
+      margin-bottom: 0.2mm;
+    }
+
+    .codes-line span {
+      margin-right: 1.5mm;
+    }
+
+    .weights-row {
+      font-size: 5px;
+      margin-bottom: 0.8mm;
+      padding: 0.5mm 0;
+      border-top: 0.2mm solid #eee;
+      border-bottom: 0.2mm solid #eee;
+    }
+
+    .weights-row .net { margin-right: 1.5mm; }
+
+    .refs-grid {
+      font-size: 5px;
+      margin-bottom: 0.6mm;
+    }
+
+    .refs-grid .row {
+      display: flex;
+      margin-bottom: 0.2mm;
+    }
+
+    .refs-grid .label {
+      flex-shrink: 0;
+      width: 14mm;
+      color: #666;
+    }
+
+    .refs-grid .value {
+      word-break: break-all;
+    }
+
+    .attr-variant-row {
+      font-size: 5px;
+      margin-bottom: 0.4mm;
+      padding-top: 0.4mm;
+      border-top: 0.15mm solid #eee;
+    }
+
+    .attr-variant-row span {
+      margin-right: 2mm;
+    }
+
+    .label-footer {
+      font-size: 4.5px;
+      color: #666;
+      padding-top: 0.4mm;
+      border-top: 0.15mm solid #ddd;
+      margin-top: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <#if stockItem.enteredQuantity?? && stockItem.enteredQuantity?number gt 0>
+    <#list 1..stockItem.enteredQuantity?number as i>
+      <div class="label-container">
+        <div class="label-header">
+          <div class="barcode-block">
+            <#if stockItem.material?? && stockItem.material.gtin??>
+              <img src="https://barcode.tec-it.com/barcode.ashx?data=${stockItem.material.gtin}" alt="Barcode"
+                class="barcode-image" />
+            </#if>
+          </div>
+          <div class="identity-block">
+            <#if stockItem.material??>
+              <#if stockItem.material.name??>
+                <div class="product-name">${stockItem.material.name}</div>
+              </#if>
+              <div class="codes-line">
+                <#if stockItem.material.matCode??><span>MAT: ${stockItem.material.matCode}</span></#if>
+                <#if stockItem.material.sku??><span>SKU: ${stockItem.material.sku}</span></#if>
+              </div>
+            </#if>
+          </div>
+        </div>
+
+        <#if stockItem.material?? && (stockItem.material.netWeight?? || stockItem.material.grossWeight??)>
+          <div class="weights-row">
+            <#if stockItem.material.netWeight??>
+              <span class="net">Net: ${stockItem.material.netWeight?c}<#if stockItem.material.netWeightUnit??> ${(stockItem.material.netWeightUnit.code)!(stockItem.material.netWeightUnit.name)!""}</#if></span>
+            </#if>
+            <#if stockItem.material.grossWeight??>
+              <span>Gross: ${stockItem.material.grossWeight?c}<#if stockItem.material.grossWeightUnit??> ${(stockItem.material.grossWeightUnit.code)!(stockItem.material.grossWeightUnit.name)!""}</#if></span>
+            </#if>
+          </div>
+        </#if>
+
+        <div class="refs-grid">
+          <#if stockItem.batchnum??>
+            <div class="row">
+              <span class="label">Batch:</span>
+              <span class="value">${stockItem.batchnum}</span>
+            </div>
+          </#if>
+          <#if stockItem.expiryDate??>
+            <div class="row">
+              <span class="label">Expiry:</span>
+              <span class="value">${stockItem.expiryDate}</span>
+            </div>
+          </#if>
+          <#if stockItem.incomingGoodsNumber??>
+            <div class="row">
+              <span class="label">IG No:</span>
+              <span class="value">${stockItem.incomingGoodsNumber}</span>
+            </div>
+          </#if>
+        </div>
+
+        <#if (stockItem.readableAttributeCode?? && stockItem.readableAttributeCode?has_content) || (stockItem.readableVariantCode?? && stockItem.readableVariantCode?has_content)>
+          <div class="attr-variant-row">
+            <#if stockItem.readableAttributeCode?? && stockItem.readableAttributeCode?has_content>
+              <span>Attr: ${stockItem.readableAttributeCode}</span>
+            </#if>
+            <#if stockItem.readableVariantCode?? && stockItem.readableVariantCode?has_content>
+              <span>Variant: ${stockItem.readableVariantCode}</span>
+            </#if>
+          </div>
+        </#if>
+
+        <#if stockItem.licenseKey?? && stockItem.licenseKey?has_content>
+          <div class="refs-grid">
+            <div class="row">
+              <span class="label">License:</span>
+              <span class="value">${stockItem.licenseKey}</span>
+            </div>
+          </div>
+        </#if>
+
+        <#if stockItem.stockHead?? && stockItem.stockHead.postDate??>
+          <div class="label-footer">
+            Post: ${stockItem.stockHead.postDate}
+          </div>
+        </#if>
+      </div>
+    </#list>
+  </#if>
+</body>
+
+</html>
