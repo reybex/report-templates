@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Label – Alt Layout</title>
+  <style>
+    @page {
+      size: 51mm 12mm;
+      margin: 0;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 51mm;
+      font-family: 'Courier New', monospace;
+      font-size: 5.5px;
+      line-height: 1.1;
+      color: #1a1a1a;
+    }
+
+    .label-container {
+      width: 51mm;
+      height: 12mm;
+      max-height: 12mm;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      page-break-after: always;
+      page-break-inside: avoid;
+    }
+
+    .label-container:last-child {
+      page-break-after: auto;
+    }
+
+    .label-table {
+      width: 51mm;
+      height: 12mm;
+      margin: 0;
+      padding: 0;
+      border-collapse: collapse;
+      border: 0.5mm solid #333;
+      table-layout: fixed;
+    }
+
+    .label-sidebar {
+      width: 15mm;
+      vertical-align: top;
+      padding: 0.8mm 0.8mm;
+      border-right: 0.5mm solid #333;
+      background: #f6f6f6;
+    }
+
+    .sidebar-inner {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .barcode-cell {
+      text-align: center;
+      padding-bottom: 0.6mm;
+      height: 10mm;
+      vertical-align: middle;
+    }
+
+    .barcode-image {
+      max-width: 15mm;
+      max-height: 5.5mm;
+      width: auto;
+      height: auto;
+      display: block;
+      margin-left: 1mm;
+      margin-right: auto;
+    }
+
+    .product-code-cell {
+      text-align: center;
+      padding: 0;
+      vertical-align: top;
+    }
+
+    .product-code {
+      font-size: 5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-align: center;
+      word-break: break-all;
+      line-height: 1.1;
+      color: #333;
+      margin: 0;
+    }
+
+    .label-main {
+      vertical-align: top;
+      padding: 0.8mm 1mm;
+      width: auto;
+    }
+
+    .product-info {
+      font-size: 5.5px;
+      line-height: 1.15;
+      margin-bottom: 0.5mm;
+    }
+
+    .product-info .name {
+      font-weight: 700;
+      font-size: 6px;
+      margin-bottom: 0.2mm;
+      color: #111;
+    }
+
+    .product-info .description {
+      font-size: 5px;
+      color: #444;
+      line-height: 1.1;
+    }
+
+    .data-section {
+      margin-top: 0.3mm;
+      padding: 0.25mm 0.4mm;
+      border-radius: 0.3mm;
+      background: #f5f5f5;
+      border: 0.1mm solid #e8e8e8;
+      font-size: 3.5px;
+      line-height: 1.2;
+      color: #333;
+    }
+
+    .data-line {
+      margin-bottom: 0.12mm;
+    }
+
+    .data-line:last-child {
+      margin-bottom: 0;
+    }
+
+    .data-tag {
+      color: #555;
+      font-weight: 600;
+      margin-right: 0.2mm;
+    }
+
+    .data-val {
+      font-family: 'Consolas', 'Monaco', monospace;
+      word-break: break-all;
+      margin-right: 1.2mm;
+      color: #1a1a1a;
+    }
+  </style>
+</head>
+
+<body>
+  <#if stockItem.enteredQuantity?number gt 0>
+    <#list 1..stockItem.enteredQuantity as i>
+      <div class="label-container" style="width: 51mm; height: 12mm; max-height: 12mm;">
+        <table class="label-table" cellpadding="0" cellspacing="0" width="51mm" height="12mm" style="width: 51mm; height: 12mm;" role="presentation">
+          <tr style="height: 12mm;">
+            <td class="label-sidebar" style="width: 15mm;">
+              <table class="sidebar-inner" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+                <tr>
+                  <td class="barcode-cell">
+                    <#if stockItem.material.gtin??>
+                      <img src="https://barcode.tec-it.com/barcode.ashx?data=${stockItem.material.gtin}" alt="Barcode"
+                        class="barcode-image" />
+                    </#if>
+                  </td>
+                </tr>
+                <#if stockItem.material.code??>
+                <tr>
+                  <td class="product-code-cell">
+                    <p class="product-code">${stockItem.material.code}</p>
+                  </td>
+                </tr>
+                </#if>
+              </table>
+            </td>
+                        <td class="label-main">
+              <div class="product-info">
+                <#if stockItem.material.name??>
+                  <div class="name">${stockItem.material.name}</div>
+                </#if>
+                <#if stockItem.material.matCode?? || stockItem.material.sku??>
+                  <div class="description">
+                    <#if stockItem.material.matCode??>MAT: ${stockItem.material.matCode}</#if><#if stockItem.material.matCode?? && stockItem.material.sku??> · </#if><#if stockItem.material.sku??>SKU: ${stockItem.material.sku}</#if>
+                  </div>
+                </#if>
+              </div>
+              <div class="data-section">
+                <#if stockItem.batchnum?? || stockItem.expiryDate?? || stockItem.incomingGoodsNumber?? || (stockItem.stockHead?? && stockItem.stockHead.postDate??)>
+                <div class="data-line">
+                  <#if stockItem.batchnum??><span class="data-tag">Batch: </span><span class="data-val">${stockItem.batchnum}</span></#if>
+                  <#if stockItem.expiryDate??><span class="data-tag">Exp: </span><span class="data-val">${stockItem.expiryDate}</span></#if>
+                  <#if stockItem.incomingGoodsNumber??><span class="data-tag">IG: </span><span class="data-val">${stockItem.incomingGoodsNumber}</span></#if>
+                </div>
+                <#if stockItem.stockHead?? && stockItem.stockHead.postDate??>
+                <div class="data-line">
+                  <span class="data-tag">Post: </span><span class="data-val">${stockItem.stockHead.postDate}</span>
+                </div>
+                </#if>
+                </#if>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </#list>
+  </#if>
+</body>
+
+</html>
