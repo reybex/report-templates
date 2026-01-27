@@ -69,26 +69,26 @@
 </head>
 
 <body>
-  <#if enteredQuantity?number gt 0>
-    <#list 1..enteredQuantity as i>
+  <#if stockItem.enteredQuantity?number gt 0>
+    <#list 1..stockItem.enteredQuantity as i>
       <div class="label-container">
         <div class="barcode-section">
-          <#if material.gtin??>
-            <img src="https://barcode.tec-it.com/barcode.ashx?data=${material.gtin}" alt="Barcode"
+          <#if stockItem.material.gtin??>
+            <img src="https://barcode.tec-it.com/barcode.ashx?data=${stockItem.material.gtin}" alt="Barcode"
               class="barcode-image" />
           </#if>
         </div>
 
-        <#if material.code??>
-          <div class="product-code">${material.code}</div>
+        <#if stockItem.material.code??>
+          <div class="product-code">${stockItem.material.code}</div>
         </#if>
 
         <div class="product-info">
-          <#if material.name??>
-            ${material.name}<br />
+          <#if stockItem.material.name??>
+            ${stockItem.material.name}<br />
           </#if>
-          <#if material.description??>
-            ${material.description}<br />
+          <#if stockItem.material.description??>
+            ${stockItem.material.description}<br />
           </#if>
         </div>
 
