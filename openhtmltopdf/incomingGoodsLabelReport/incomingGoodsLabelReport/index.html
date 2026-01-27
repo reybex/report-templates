@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Label</title>
+  <style>
+    @page {
+      size: 51mm 32mm;
+      margin: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      font-size: 7px;
+      line-height: 1.1;
+    }
+
+    .label-container {
+      width: 51mm;
+      height: 32mm;
+      margin: 0;
+      padding: 1.5mm;
+      box-sizing: border-box;
+      page-break-after: always;
+      page-break-inside: avoid;
+      display: block;
+      position: relative;
+    }
+
+    .label-container:last-child {
+      page-break-after: auto;
+    }
+
+    .barcode-section {
+      text-align: left;
+      margin-bottom: 1mm;
+      height: 8mm;
+    }
+
+    .barcode-image {
+      width: 30mm;
+      height: 7mm;
+      object-fit: contain;
+      display: block;
+    }
+
+    .product-code {
+      font-weight: bold;
+      font-size: 7px;
+      margin-bottom: 0.5mm;
+      letter-spacing: 0.2px;
+    }
+
+    .product-info {
+      font-size: 7px;
+      line-height: 1.2;
+      margin-bottom: 1mm;
+    }
+
+    .company-section {
+      font-size: 6px;
+      line-height: 1.1;
+    }
+  </style>
+</head>
+
+<body>
+  <#if enteredQuantity?number gt 0>
+    <#list 1..enteredQuantity as i>
+      <div class="label-container">
+        <div class="barcode-section">
+          <#if material.gtin??>
+            <img src="https://barcode.tec-it.com/barcode.ashx?data=${material.gtin}" alt="Barcode"
+              class="barcode-image" />
+          </#if>
+        </div>
+
+        <#if material.code??>
+          <div class="product-code">${material.code}</div>
+        </#if>
+
+        <div class="product-info">
+          <#if material.name??>
+            ${material.name}<br />
+          </#if>
+          <#if material.description??>
+            ${material.description}<br />
+          </#if>
+        </div>
+
+        <div class="company-section">
+          EU-Importeur: mellon GmbH<br />
+          Konrad-Zuse-Ring 31<br />
+          D 53424 Remagen / Germany<br />
+          www.mellon.de - Mail: info@mellon.de<br />
+          WEEE-Reg.-Nr. DE 45499931
+        </div>
+      </div>
+    </#list>
+  </#if>
+</body>
+
+</html>
