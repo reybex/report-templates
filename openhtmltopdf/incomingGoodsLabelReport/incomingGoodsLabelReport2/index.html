@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Label – Alt Layout</title>
+  <style>
+    @page {
+      size: 51mm 32mm;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Courier New', monospace;
+      font-size: 6px;
+      line-height: 1.15;
+      color: #1a1a1a;
+    }
+
+    .label-container {
+      width: 51mm;
+      height: 32mm;
+      margin: 0;
+      padding: 0;
+      page-break-after: always;
+      page-break-inside: avoid;
+      display: flex;
+      flex-direction: row;
+      position: relative;
+      border: 0.5mm solid #333;
+      background: #fff;
+    }
+
+    .label-container:last-child {
+      page-break-after: auto;
+    }
+
+    /* Left strip: barcode + code */
+    .label-sidebar {
+      width: 16mm;
+      min-width: 16mm;
+      padding: 1.2mm 1mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      border-right: 0.5mm solid #333;
+      background: #f6f6f6;
+    }
+
+    .barcode-section {
+      width: 100%;
+      margin-bottom: 1mm;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 7mm;
+    }
+
+    .barcode-image {
+      max-width: 14mm;
+      max-height: 6.5mm;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .product-code {
+      font-size: 5.5px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-align: center;
+      word-break: break-all;
+      line-height: 1.2;
+      color: #333;
+    }
+
+    /* Right block: product + company */
+    .label-main {
+      flex: 1;
+      padding: 1.2mm 1.5mm;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .product-info {
+      flex: 1;
+      font-size: 6px;
+      line-height: 1.25;
+      margin-bottom: 1mm;
+    }
+
+    .product-info .name {
+      font-weight: 700;
+      font-size: 6.5px;
+      margin-bottom: 0.3mm;
+      color: #111;
+    }
+
+    .product-info .description {
+      font-size: 5.5px;
+      color: #444;
+    }
+
+    .company-section {
+      font-size: 5px;
+      line-height: 1.2;
+      color: #555;
+      padding-top: 0.8mm;
+      border-top: 0.25mm solid #ddd;
+      margin-top: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <#if stockItem.enteredQuantity?number gt 0>
+    <#list 1..stockItem.enteredQuantity as i>
+      <div class="label-container">
+        <div class="label-sidebar">
+          <div class="barcode-section">
+            <#if stockItem.material.gtin??>
+              <img src="https://barcode.tec-it.com/barcode.ashx?data=${stockItem.material.gtin}" alt="Barcode"
+                class="barcode-image" />
+            </#if>
+          </div>
+          <#if stockItem.material.code??>
+            <div class="product-code">${stockItem.material.code}</div>
+          </#if>
+        </div>
+        <div class="label-main">
+          <div class="product-info">
+            <#if stockItem.material.name??>
+              <div class="name">${stockItem.material.name}</div>
+            </#if>
+            <#if stockItem.material.description??>
+              <div class="description">${stockItem.material.description}</div>
+            </#if>
+          </div>
+          <div class="company-section">
+            EU-Importeur: mellon GmbH<br />
+            Konrad-Zuse-Ring 31<br />
+            D 53424 Remagen / Germany<br />
+            www.mellon.de – Mail: info@mellon.de<br />
+            WEEE-Reg.-Nr. DE 45499931
+          </div>
+        </div>
+      </div>
+    </#list>
+  </#if>
+</body>
+
+</html>
