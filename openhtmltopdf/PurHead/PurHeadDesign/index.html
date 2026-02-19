@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  </meta>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </meta>
+  <title>${purHead.docType.translatedName} ${purHead.docNumber}</title>
+  <style>
+    tr,
+    thead {
+      page-break-inside: avoid;
+    }
+
+    @page:first {
+        @top-left {
+    content: element(firstpage-header);
+        }
+    }
+
+    @page {
+      @top-center {
+        content: element(header);
+      }
+
+      @bottom-center {
+        content: element(document-footer);
+        vertical-align: top;
+        width: 100%;
+        height: 35mm;
+      }
+
+      size: A4;
+      margin: 45mm 15mm 35mm 15mm;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      color: #000;
+    }
+
+    .running-header {
+      position: running(header);
+      width: 100%;
+      max-width: 100%;
+      padding: 10px 0;
+      box-sizing: border-box;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 80px 0 20px 0;
+      -fs-table-paginate: paginate;
+      -fs-page-break-min-height: 1.5cm;
+    }
+    
+    .content-area {
+      padding: 20px 0;
+      margin-top: 90px;
+    }
+
+    td,
+    th {
+      padding: 4px;
+      vertical-align: top;
+    }
+
+    .header-row {
+      margin-top: 50px;
+      border-bottom: 1px solid #ccc;
+      width: 50%;
+    }
+
+    .sender {
+      color: #666;
+      font-size: 10px;
+      text-align: left;
+    }
+
+    .header-content {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .customer-info {
+      width: 60%;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .customer-info p {
+      margin: 0;
+    }
+
+    .auftrag-box {
+      width: 100%;
+      border: 1px solid #ababab;
+      margin-top: 0 0 10px 0;
+      font-size: 12px;
+      display: table;
+    }
+    
+    
+    .auftrag-box-row {
+      display: table-row;
+    }
+    
+    .auftrag-box-cell {
+      display: table-cell;
+      vertical-align: top;
+      border-bottom: 1px solid #ccc;
+      width: 50%; 
+    }
+    
+    .auftrag-title {
+      background: #e6e6e6;
+      font-weight: bold;
+      font-size: 16px;
+      padding: 6px 8px;
+      display: table-caption; 
+      caption-side: top;
+      margin: -6px -8px 6px -8px;
+    }
+    
+    .auftrag-title2 {
+      font-weight: bold;
+      font-size: 16px;
+      padding: 6px 8px;
+      display: table-caption; 
+      caption-side: top;
+      margin: -6px -8px 6px -8px;
+    }
+    
+    .delivery-address-top {
+      width: 50%;
+      font-size: 12px;
+      line-height: 1.4;
+      margin-top: 20px;
+    }
+    
+    .delivery-address-top .title {
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .items-table {
+        width: 100%;
+        table-layout: fixed;      
+        border-collapse: collapse;
+        margin: 0;                
+        border: 1px solid #ababab;   
+    }
+    
+    .items-table th {
+        border-bottom: 1.5px solid #999;
+        background-color: #000; /* Header schwarz */
+        color: #fff; /* Text weiß */
+        text-align: left;
+        padding: 6px 8px;
+        border-left: 1px solid #ababab;
+        border-right: 1px solid #ababab;
+    }
+    
+    .items-table tbody td {
+        border-left: 1px solid #ababab;
+        border-right: 1px solid #ababab;
+        padding: 4px 6px;
+        vertical-align: top;
+    }
+    
+    .items-table tbody tr:not(:last-child) td {
+        border-bottom: 0.5px solid #ababab;
+    }
+    
+    .items-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .notice {
+      font-size: 9px;
+      color: #555;
+    }
+
+    /* Summary section - tablonun dışında olacak */
+    .summary-section {
+      width: 100%;
+      page-break-inside: avoid;
+      margin-top: 0;
+    }
+
+    .summary-section table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .summary-section td {
+      border: none;
+      padding: 6px 4px;
+    }
+
+    .summary-section tr:not(:last-child) td {
+      border-bottom: 1px solid #ccc;
+    }
+
+    .summary-section tr:last-child td {
+      border-top: 1px solid #ababab;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .strong {
+      font-weight: bold;
+    }
+
+    .clear {
+      clear: both;
+    }
+
+    .footer {
+      position: running(document-footer);
+      page-break-inside: avoid;
+      width: 100%;
+      padding: 5px 0;
+      font-size: 9px;
+      line-height: 1.4;
+    }
+
+    .footer-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .footer-cell {
+      padding: 8px 12px;
+      vertical-align: top;
+    }
+
+    .footer-cell-bottom {
+      text-align: center;
+      font-size: 9px;
+      padding-top: 6px;
+    }
+
+    .firstpage-header {
+      position: running(firstpage-header);
+      text-align: right;
+      padding-top: 0;
+      padding-bottom: 0px;
+    }
+
+    .firstpage-header img {
+      max-height: 80px;
+      margin-bottom: 8px;
+    }
+
+    .page-number {
+      margin-right: 10px;
+      font-size: 11px;
+      text-align: right;
+    }
+
+    .page-number:after {
+      content: "" counter(page) " von " counter(pages);
+    }
+  </style>
+</head>
+
+<body> 
+
+ 
+<div class="firstpage-header">
+  <table style="width:100%; border-collapse: collapse;">
+    <tr>
+      <!-- LINKS: Lieferanschrift + Rechnungsanschrift des Kunden -->
+<td style="width: 50%; vertical-align: top; font-size: 12px; line-height: 1.3; text-align: left; padding-right: 15px;">
+
+  <!-- Titel -->
+  <div style="font-weight: bold; margin-bottom: 8px;">
+    Lieferanschrift / Leistungsempfänger:
+  </div>
+
+  <!-- Lieferadresse -->
+  <div style="margin-bottom: 15px;">
+    <#if purHeadreceiverStreet1?? && purHead.receiverStreet1?has_content>
+      ${purHead.receiverAddressline1!''}<br/>
+      <#if purHead.receiverAddressline2?? && purHead.receiverAddressline2?has_content>
+        ${purHead.receiverAddressline2}<br/>
+      </#if>
+      ${purHead.receiverStreet1!''}<br/>
+      <strong>${purHead.receiverZipStreet!''} ${purHead.receiverCity!''}</strong>
+    <#else>
+      ${purHead.vendor.name!''}<br/>
+      ${purHead.customerStreet1!''}<br/>
+      <strong>${purHead.customerZipStreet!''} ${purHead.customerCity!''}</strong>
+    </#if>
+  </div>
+
+  <!-- Barcode -->
+  <div style="margin: 15px 0;">
+    <img src="${purHead.barcodeUrl!''}" style="height:40px;" />
+  </div>
+
+    <!-- Absenderzeile -->
+    <div style="font-size: 10px; color: #666; margin-bottom: 3px;">
+      ${company.name!''} • ${company.street!''} • ${company.zip!''} ${company.city!''}
+    </div>
+    <div style="border-bottom: 1px solid #ababab; width: 100%; margin-bottom: 12px;"></div>
+
+  <!-- Rechnungsadresse -->
+  <div style="margin-bottom: 15px;">
+    ${purHead.vendor.name!''}<br/>
+    ${purHead.customerStreet1!''}<br/>
+    <strong>${purHead.customerZipStreet!''} ${purHead.customerCity!''}</strong>
+  </div>
+
+
+
+</td>
+
+      <!-- RECHTS: Logo + Firmenadresse  -->
+     <td style="width: 50%; vertical-align: top; text-align: right;">
+
+     <div style="width: 260px; display: inline-block; text-align: left; font-size: 11px; line-height: 1.4;">
+
+    <!-- Logo -->
+    <div style=" margin-bottom: 8px;">
+      <img src="${company.urlPreview!''}" style="max-height: 75px;" />
+    </div>
+    <div style="position:relative;">
+        <!-- Firmendaten -->
+    <#assign pc = purHead.profitCenter!>
+    
+    <strong>
+        <#if pc?? && pc.companyName?has_content>
+            ${pc.companyName}
+        <#else>
+            ${company.name!''}
+        </#if>
+    </strong><br/>
+    <#if pc?? && pc.translatedName?has_content>
+        ${t('profitCenter')}: ${pc.translatedName} <br/>
+    </#if>
+    
+    <#if pc?? && pc.companyStreet?has_content>
+        ${pc.companyStreet}
+    <#else>
+        ${company.street!''}
+    </#if>
+     • 
+    <#if pc?? && pc.companyZipcode?has_content>
+        ${pc.companyZipcode}
+    <#else>
+        ${company.zip!''}
+    </#if>
+     
+    <#if pc?? && pc.companyCity?has_content>
+        ${pc.companyCity}
+    <#else>
+        ${company.city!''}
+    </#if>
+    <br/>
+    
+    Telefon:
+    <#if pc?? && pc.companyPhone?has_content>
+        ${pc.companyPhone}
+    <#else>
+        ${company.phone!''}
+    </#if>
+    <br/>
+    
+    Telefax:
+    <#if pc?? && pc.companyFax?has_content>
+        ${pc.companyFax}
+    <#else>
+        ${company.fax!''}
+    </#if>
+    <br/>
+    
+    Internet:
+    <#if pc?? && pc.companyWeb?has_content>
+        ${pc.companyWeb}
+    <#else>
+        ${company.web!''}
+    </#if>
+    <br/>
+    
+    E-Mail:
+    <#if pc?? && pc.companyEmail?has_content>
+        ${pc.companyEmail}
+    <#else>
+        ${company.email!''}
+    </#if>
+    <br/>
+    
+    HRB
+    <#if pc?? && pc.companyCompanyRegister?has_content>
+        ${pc.companyCompanyRegister}
+    <#else>
+        ${company.companyRegister!}
+    </#if>
+    <br/>
+    
+    UID-Nr.:
+    <#if pc?? && pc.companyUstdid?has_content>
+        ${pc.companyUstdid}
+    <#else>
+        ${company.ustdid}
+    </#if>
+    <br/>
+    
+    Geschäftsführer:
+    <#if pc?? && pc.companyCeos?has_content>
+        ${pc.companyCeos}
+    <#else>
+        ${company.ceos}
+    </#if>
+    <br/>
+    <br/>
+        <br/>
+    
+
+    <!-- Datum rechts im Block -->
+    <div style="position: absolute;
+      right: 0;
+      bottom: 10px;
+      font-weight: bold;
+      white-space: nowrap;"
+    >
+      ${df(purHead.docDate, 'dd.MM.yyyy')}
+    </div>
+    
+</div>
+    </div>
+
+    </td>
+    
+    
+    
+    </tr>
+  </table>
+</div>
+
+
+  
+  <!-- Running header for next pages -->
+  <div class="running-header">
+
+  </div>
+  
+  <div class="content-area">
+
+<div class="auftrag-box">
+
+  <div class="auftrag-box-row">
+
+    <!-- SPALTE 1 LINKS -->
+    <div class="auftrag-box-cell">
+
+      <!-- Doctype Header -->
+      <div style="font-weight:bold; font-size:18px; padding:6px 8px;">
+        ${purHead.docType.translatedName}
+      </div>
+      
+      <div style="padding: 6px 8px;">
+          Ihre FAX-Nr.: 
+      </div>
+
+      <!-- Faxnummer -->
+      <!--<div style="font-weight:600; font-size:12px; margin-top:4px;">
+        Ihre Fax-Nr.: ${company.fax!''}
+      </div>-->
+
+      <!-- Untertabelle links -->
+    <table style="width:70%; margin-top:10px; border-collapse: collapse; border-top:1px solid #ababab; border-right:1px solid #ababab;">
+      <tr>
+        <td style="font-weight:bold; width:50%; padding:4px;">unsere Kd-Nr.:</td>
+        <td style="font-weight:bold; padding:4px;">${purHead.vendor.customerNo!''}</td>
+      </tr>
+      <tr>
+        <td style="padding:4px;">Bestellung-Nr.:</td>
+        <td style="padding:4px;">${purHead.docNumber!''}</td>
+      </tr>
+      <tr>
+        <td style="padding:4px;">Lieferanten-Nr.:</td>
+        <td style="padding:4px;">${purHead.shipping.translatedName!''}</td>
+      </tr>
+    </table>
+
+
+    </div>
+
+    <!-- SPALTE 2 RECHTS -->
+<div class="auftrag-box-cell" style="border-left:1px solid #ababab; font-family:Arial, sans-serif;">
+
+  <!-- HEADER -->
+  <table style="width:100%; border-collapse:collapse; font-size:16px;">
+    <tr>
+      <td style="font-weight:bold; border-right:1px solid #ababab;">
+        <#if purHead.docType.translatedName == "Angebot">
+          AN-Nr.: ${purHead.docNumber}
+        <#elseif purHead.docType.translatedName == "Auftrag">
+          AB-Nr.: ${purHead.docNumber}
+        <#elseif purHead.docType.translatedName == "Rechnung">
+          RE-Nr.: ${purHead.docNumber}
+        <#else>
+          ${purHead.docNumber}
+        </#if>
+      </td>
+      <td style="width:120px; font-size:11px; text-align:right; padding:6px 8px;">
+        Seite: <span class="page-number"></span>
+      </td>
+    </tr>
+  </table>
+
+  <!-- BODY GRID -->
+  <table style="width:100%; border-collapse:collapse; font-size:11px;">
+
+    <!-- Row 1 Labels -->
+    <tr>
+      <td style="border-top: 1px solid #ababab; padding:4px;">Vereinbarung vom:</td>
+      <td style="border-top: 1px solid #ababab; border-left:1px solid #ababab; padding:4px;">Liefertermin:</td>
+    </tr>
+
+    <!-- Row 1 Values -->
+    <tr>
+      <td style="border-bottom:1px solid #ababab; padding:4px;">
+        ${df(purHead.docDate, 'dd.MM.yyyy')}
+      </td>
+      <td style="border:1px solid #ababab; border-top:0px; padding:4px;">
+        ${df(purHead.deliveryDate, 'dd.MM.yyyy')}
+      </td>
+    </tr>
+
+    <!-- Ansprechpartner -->
+    <tr>
+      <td style="border-top:1px solid #ababab; padding:4px;">Unser Zeichen:</td>
+      <td style="border-top:1px solid #ababab; border-left:1px solid #ababab; padding:4px;">Interner Vermerk:</td>
+    </tr>
+
+    <tr>
+        <td style="border-bottom:1px solid #ababab; padding:4px;">
+        <#if purHead.purDepartment.name??>
+          ${purHead.purDepartment.name}
+        </#if>
+        <#if purHead.purDepartment.surname??>
+          ${purHead.purDepartment.surname}
+        </#if>
+        </td>
+        <td style="border:1px solid #ababab; border-top:0px; padding:4px;">
+        <#if purHead.intOrderNum??>
+           ${purHead.intOrderNum}
+        </#if>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            ${purHead.intOrderNum!''}
+        </td>
+    </tr>
+
+  </table>
+
+</div>
+
+  </div>
+</div>
+
+
+    <#assign showDiscount=false>
+      <#list purHead.items as item>
+        <#if item.totalDiscountAmount?? && item.totalDiscountAmount?has_content && item.totalDiscountAmount?replace(",", ".")?replace(" ", "")?number != 0>
+          <#assign showDiscount=true>
+            <#break>
+        </#if>
+      </#list>
+          <table class="items-table" style="width:100%; table-layout: fixed; border:1px solid #ababab;">
+          <colgroup>
+            <col style="width:10%;" /> <!-- Anzahl -->
+            <col style="width:15%;" /> <!-- Artikelnr -->
+            <col style="width:40%;" /> <!-- Bezeichnung -->
+            <col style="width:15%;" /> <!-- Einzelpreis -->
+            <#if showDiscount>
+            <col style="width:10%;" /> <!-- Rabatt -->
+            </#if>
+            <col style="width:10%;" /> <!-- Gesamtpreis -->
+          </colgroup>
+        <thead>
+          <tr>
+            <th>Anzahl</th>
+            <th>Artikelnr.</th>
+            <th>Bezeichnung</th>
+            <th>Einzelpreis</th>
+            <#if showDiscount>
+              <th>Rabatt</th>
+            </#if>
+            <th>Gesamtpreis</th>
+          </tr>
+        </thead>
+        <tbody>
+            <#assign totalQty = 0>
+            <#assign taxrate19 = 0>
+            <#assign taxrate0 = 0>
+            <#assign taxrate7 = 0>
+            
+            <#list purHead.items as item>
+              <#if item.isDelete == false>
+                <tr>
+                  <td style="text-align: center;">${item.quantity?string("0.##")} Stk</td>
+                  <td>
+                    <#if item.material.printMatCode?has_content> 
+                      ${item.material.printMatCode} 
+                    <#else> 
+                      ${item.material.matCode} 
+                    </#if>
+                  </td>
+                  <td>
+                    ${item.material.name}
+                    <#if item.longDescription?? && item.longDescription?has_content>
+                      <br/><span class="notice">${item.longDescription?replace("<[^>]*>", "", "r")}</span>
+                    </#if>
+                  </td>
+                  
+                  <#if item.vatKey?? && item.vatKey.rate??>
+                    <#if item.vatKey.rate == 19>
+                      <#assign taxrate19 = taxrate19 + (item.vatAmount!0)>
+                    </#if>
+                    <#if item.vatKey.rate == 0>
+                      <#assign taxrate0 = taxrate0 + (item.vatAmount!0)>
+                    </#if>
+                    <#if item.vatKey.rate == 7>
+                      <#assign taxrate7 = taxrate7 + (item.vatAmount!0)>
+                    </#if>
+                  </#if>
+            
+                  <td>${item.price?string("0.00")} ${purHead.currency.symbol!''}</td>
+            
+                  <#if showDiscount>
+                    <td>
+                      <#assign totalDiscountRate = 0>
+                      <#if item.discounts?? && item.discounts?size gt 0>
+                        <#list item.discounts as dr>
+                          <#if dr.discountRate??>
+                            <#assign totalDiscountRate = totalDiscountRate + dr.discountRate>
+                          </#if>
+                        </#list>
+                      </#if>
+                      ${(totalDiscountRate * -1)?string("0.##")} %
+                    </td>
+                  </#if>
+            
+                  <td style="text-align: right;">
+                    ${(item.nettAmount + item.totalDiscountAmount)?string("0.00")} ${purHead.currency.symbol!''}
+                  </td>
+                </tr>
+              </#if>
+            </#list>
+
+        </tbody>
+      </table>
+
+      <!-- SUMMARY SECTION - Artık tfoot değil, ayrı bir bölüm -->
+      <div class="summary-section">
+        <table style="width:100%; table-layout: fixed; border-collapse:collapse;">
+          <colgroup>
+            <col style="width:5%;" />
+            <col style="width:15%;" />
+            <col style="width:30%;" />
+            <col style="width:10%;" />
+            <col style="width:10%;" />
+            <col style="width:15%;" />
+            <#if showDiscount>
+              <col style="width:8%" />
+            </#if>
+            <col style="width:12%;" />
+          </colgroup>
+          <tbody>
+            <#assign versandkosten = 0.00>
+
+            <#if purHead.discounts??>
+              <#list purHead.discounts as discount>
+                <#if discount.discountType.isShippingCost== true>
+                  <#assign versandkosten = versandkosten + discount.discountAmount>
+                </#if>
+              </#list>
+            </#if>
+
+            <tr>
+              <td style="height: 25px;" colspan="${showDiscount?then(8,7)}"></td>
+            </tr> 
+            <!-- Versandkosten Zeile -->
+            <tr>
+              <td colspan="${showDiscount?then(6,5)}" style="border-bottom: 1px solid #ababab; "></td>
+              <td style="text-align: right; padding-right: 15px; border-bottom: 1px solid #ababab; white-space: nowrap;">
+                Versandkosten</td>
+              <td style="text-align: right; border-bottom: 1px solid #ababab; white-space: nowrap; min-width: 120px;">
+                ${nf(versandkosten)} ${purHead.currency.symbol!''}</td>
+            </tr> 
+            <!-- Nettobetrag Zeile -->
+            <tr>
+              <td colspan="${showDiscount?then(4,3)}" rowspan="4" style="vertical-align: top; padding-top: 0;">
+                <table style="width: 60%; border-collapse: collapse; margin: 0; padding: 0;">
+                  <tr>
+                    <td
+                      style="text-align: left; font-size: 12px; border: none; font-weight: normal; white-space: nowrap; padding: 2px 10px 2px 0;">
+                      Zahlungsbedingung:</td>
+                    <td style="text-align: left; font-size: 12px; white-space: nowrap; border: none; font-weight: normal; padding: 2px 0;">
+                      ${purHead.paymcond.translatedName!''}</td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="text-align: left; font-size: 12px; border: none; font-weight: normal; white-space: nowrap; padding: 2px 10px 2px 0;">
+                      Zahlungsart:</td>
+                    <td style="text-align: left; font-size: 12px; border: none; font-weight: normal; padding: 2px 0;">
+                      ${purHead.paymentType.translatedName!''}</td>
+                  </tr>
+                </table>
+              </td>
+              <td colspan="${showDiscount?then(1,2)}"></td>
+              <td colspan="${showDiscount?then(2,1)}"
+                style="text-align: left; padding-right: 15px; border-bottom: 1px solid #ababab; white-space: nowrap;">
+                Nettobetrag</td>
+              <td style="text-align: right; border-bottom: 1px solid #ababab; white-space: nowrap;">
+                  ${nf(purHead.subTotal + purHead.totalDiscountAmount)}
+                ${purHead.currency.symbol!''}</td>
+            </tr> <!-- MwSt. Zeile -->
+            <tr>
+              <td colspan="${showDiscount?then(1,2)}" style="border:none;"></td>
+              <td colspan="${showDiscount?then(2,1)}"
+                style="text-align: left; padding-right: 15px; border-bottom: 1px solid #ababab; white-space: nowrap;">
+                MwSt.-Betrag <#if taxrate19 !=0>19 %</#if>
+                <#if taxrate0 !=0>0 %</#if>
+                <#if taxrate7 !=0>7 %</#if>
+              </td>
+              <td style="text-align: right; border-bottom: 1px solid #ababab; white-space: nowrap;">
+                  ${nf(purHead.taxAmount)} ${purHead.currency.symbol!''}
+              </td>
+            </tr> <!-- Gesamtbetrag Zeile -->
+            <tr>
+              <td colspan="${showDiscount?then(1,2)}" style="border: none;"></td>
+              <td colspan="${showDiscount?then(2,1)}"
+                style="text-align: left; padding-right: 15px; font-size: 12px; border-top: 1px solid #ababab; border-bottom: 1px solid #ababab; font-weight: normal; white-space: nowrap;">
+                Gesamtbetrag</td>
+              <td
+                style="text-align: right; font-size: 12px; border-top: 1px solid #ababab; border-bottom: 1px solid #ababab; font-weight: normal; white-space: nowrap;">
+                ${nf(purHead.totalAmount)} ${purHead.currency.symbol!''}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="height: 20px;"></div>
+      <div>
+          <#list purHead.texts as text>
+            <#if text.printInDefault??>
+                ${text.name?replace("<br\\s*>", "<br />", "r")?no_esc}
+            </#if>
+          </#list>
+      </div>
+
+    
+  </div>
+</body>
+
+</html>
