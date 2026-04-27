@@ -1,97 +1,111 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="UTF-8" />
-  <title>Artikel Etikett</title>
-
+  <title>Etikett</title>
   <style>
+    @page {
+      size: 60mm 60mm;
+      margin: 0;
+    }
+
+    html,
     body {
+      width: 60mm;
+      height: 60mm;
+      margin: 0;
+      padding: 0;
+    }
+
+    .label {
+      width: 60mm;
+      height: 60mm;
+      background: #e6e6e6;
+      padding: 3mm;
+      box-sizing: border-box;
+      position: relative;
       font-family: Arial, sans-serif;
-      margin: 30px;
-      width: 600px;
     }
-    h2 {
+
+    .center {
       text-align: center;
+    }
+
+    /* Oberer Barcode */
+    .barcode-img {
+      width: 40mm;
+      height: 10mm;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Unterer Barcode */
+    .barcode-img.bottom {
+      width: 30mm;
+      height: 8mm;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .code-text {
+      font-size: 8pt;
+      margin-top: 1mm;
+      text-align: center;
+    }
+
+    .right {
+      position: absolute;
+      right: 3mm;
+      top: 16mm;
+      font-size: 18pt;
       font-weight: bold;
     }
-    .article-name {
-      font-style: italic;
+
+    .content {
+      margin-top: 2mm;
+      font-size: 9pt;
+      line-height: 1.2;
+    }
+
+    .spacer {
+      height: 2mm;
+    }
+
+    .bottom {
+      position: absolute;
+      bottom: 3mm;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
-      margin-bottom: 20px;
-    }
-    .barcode {
-      text-align: center;
-      margin: 15px 0;
-    }
-    .barcode-text {
-      font-family: monospace;
-      font-size: 12px;
-      text-align: center;
-      margin-top: 5px;
-    }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      margin-bottom: 30px;
-    }
-    th, td {
-      border: 1px solid #999;
-      padding: 6px 10px;
-      text-align: left;
-    }
-    th {
-      background-color: #eee;
-      width: 40%;
-    }
-    .empty-box {
-      border: 1px solid black;
-      height: 60px;
-      margin-bottom: 30px;
-    }
-    .order-customer {
-      border: 2px solid black;
-      padding: 10px;
-      font-weight: bold;
-      font-size: 16px;
-      text-align: center;
-      color: black;
     }
   </style>
 </head>
 
 <body>
-
-  <#assign barcode1Text = "(01)" + item.gtin + "(17)" + expiryDate + "(10)" + batchnum + "(30)" + quantity>
-  <#assign barcode2Text = "(00)" + logistics.nve>
-  <h2>Artikelnummer ${item.code}</h2>
-  <div class="article-name">${item.name}</div>
-
-    <img src="https://barcode.tec-it.com/barcode.ashx?data=${barcode1Text}" alt="Barcode"
-              class="barcode-image" />
-
-<img src="https://barcode.tec-it.com/barcode.ashx?data=${barcode2Text}" alt="Barcode"
-              class="barcode-image" />
-
-  <table>
-    <tr><th>Artikelnummer</th><td>${item.code}</td></tr>
-    <tr><th>Artikelbezeichnung</th><td>${item.name}</td></tr>
-    <tr><th>GTIN</th><td>${item.gtin}</td></tr>
-    <tr><th>Menge</th><td>${quantity}</td></tr>
-    <tr><th>MHD</th><td>${expiryDate}</td></tr>
-    <tr><th>Charge</th><td>${batchnum}</td></tr>
-    <tr><th>SSCC</th><td>${logistics.nve}</td></tr>
-  </table>
-
-  <div class="empty-box"></div>
-
-  <div class="order-customer">
-    Bestellnummer: ${document.number} <br />
-    Kundennummer: ${customer.number}
+  <div class="label">
+    <!-- oberer Barcode -->
+    <img src="https://barcode.tec-it.com/barcode.ashx?data=${doc_number}" class="barcode-img" />
+    <!-- rechtes M -->
+    <div class="right">M</div>
+    <!-- Inhalt -->
+    <div class="content">
+      <div><strong>${sku}</strong></div>
+      <div>${materialName}</div>
+      <div class="spacer"></div>
+      <div><strong>${quantity}</strong></div>
+      <div class="spacer"></div>
+      <div><strong>Kunde:</strong> ${relations_customer_name}</div>
+    </div>
+    <!-- unterer Barcode -->
+    <div class="bottom">
+      <img src="https://barcode.tec-it.com/barcode.ashx?data=${doc_number}" class="barcode-img bottom" />
+    </div>
   </div>
-
-  
-
 </body>
+
 </html>
