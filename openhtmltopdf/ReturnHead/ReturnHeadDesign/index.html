@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8"></meta>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+  <title>Report zu Reklamation</title>
+  <style>
+    tr,
+    thead,
+    tfoot {
+      page-break-inside: avoid;
+    }
+
+    @page:first {
+      @top-center {
+        content: element(firstpage-header);
+      }
+    }
+
+    @page {
+      @top-center {
+        content: element(header);
+      }
+
+      @bottom-center {
+        content: element(document-footer);
+        vertical-align: top;
+        width: 100%;
+        height: 20mm;
+      }
+
+      size: A4;
+      margin: 55mm 15mm 25mm 15mm;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #000;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    /* ── RUNNING HEADER (page 2+) ── */
+    .running-header {
+      position: running(header);
+      width: 100%;
+      padding: 6px 0;
+      box-sizing: border-box;
+    }
+
+    .running-header-inner {
+      display: table;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .running-header-logo {
+      display: table-cell;
+      width: 60%;
+      vertical-align: middle;
+    }
+
+    .running-header-logo img {
+      max-height: 40px;
+    }
+
+    .running-title-box {
+      display: table-cell;
+      width: 100%;
+      background-color: #e8e8e8;
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      vertical-align: middle;
+    }
+
+    .running-title-left {
+      display: table-cell;
+      font-size: 14px;
+      font-weight: bold;
+      vertical-align: middle;
+      padding: 6px 10px;
+      width: 70%;
+    }
+
+    .running-title-right {
+      display: table-cell;
+      font-size: 11px;
+      vertical-align: middle;
+      text-align: right;
+      padding: 6px 10px;
+      width: 30%;
+    }
+
+    /* ── FIRST PAGE HEADER ── */
+    .firstpage-header {
+      position: running(firstpage-header);
+      width: 100%;
+      padding: 6px 0;
+      box-sizing: border-box;
+    }
+
+    .firstpage-logo-row {
+      text-align: right;
+      padding-bottom: 8px;
+    }
+
+    .firstpage-logo-row img {
+      max-height: 55px;
+    }
+
+    .firstpage-title-box {
+      width: 100%;
+      background-color: #e8e8e8;
+      border: 1px solid #ccc;
+      padding: 0;
+    }
+
+    .firstpage-title-inner {
+      display: table;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .firstpage-title-left {
+      display: table-cell;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 8px 12px;
+      vertical-align: middle;
+      width: 100%;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      position: running(document-footer);
+      width: 100%;
+      font-size: 9px;
+      color: #555;
+      border-top: 1px solid #ccc;
+      padding-top: 4px;
+      box-sizing: border-box;
+    }
+
+    .footer-inner {
+      display: table;
+      width: 100%;
+    }
+
+    .footer-left {
+      display: table-cell;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .footer-right {
+      display: table-cell;
+      text-align: right;
+      vertical-align: top;
+    }
+
+    .page-number:after {
+      content: "Seite : " counter(page);
+    }
+
+    /* ── CONTENT ── */
+    .content-area {
+      padding: 10px 0;
+      margin-top: 160px;
+    }
+
+    /* ── INFO TABLE (header fields) ── */
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .info-table td {
+      padding: 3px 6px;
+      vertical-align: top;
+    }
+
+    .info-label {
+      font-weight: bold;
+      width: 35%;
+      white-space: nowrap;
+    }
+
+    .info-value {
+      width: 65%;
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      background-color: #d0d0d0;
+      font-weight: bold;
+      font-size: 11px;
+      padding: 5px 8px;
+      border: 1px solid #aaa;
+      margin-top: 14px;
+      margin-bottom: 0;
+    }
+
+    .section-content {
+      border: 1px solid #ccc;
+      border-top: none;
+      padding: 8px;
+    }
+
+    /* ── ITEMS TABLE ── */
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 4px;
+      -fs-table-paginate: paginate;
+      -fs-page-break-min-height: 1.5cm;
+    }
+
+    .items-table th {
+      background-color: #e8e8e8;
+      border: 1px solid #aaa;
+      padding: 5px 6px;
+      text-align: left;
+      font-size: 10px;
+    }
+
+    .items-table td {
+      border: 1px solid #ccc;
+      padding: 5px 6px;
+      vertical-align: top;
+      font-size: 10px;
+    }
+
+    .items-table tr:nth-child(even) td {
+      background-color: #fafafa;
+    }
+
+    /* ── STATUS BADGE ── */
+    .status-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: 9px;
+      background-color: #e8e8e8;
+      border: 1px solid #aaa;
+    }
+
+    /* ── PRODUCT IMAGE ── */
+    .product-img {
+      max-width: 50px;
+      max-height: 50px;
+      vertical-align: middle;
+    }
+
+    /* ── NOTES BOX ── */
+    .notes-box {
+      border: 1px solid #ccc;
+      padding: 8px;
+      min-height: 30px;
+      font-size: 10px;
+      background-color: #fafafa;
+    }
+
+    /* ── META ROW (berichtet von etc.) ── */
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+
+    .meta-table td {
+      padding: 4px 8px;
+      vertical-align: top;
+      width: 33%;
+    }
+
+    .meta-label {
+      font-weight: bold;
+      font-size: 10px;
+    }
+
+    .meta-value {
+      font-size: 10px;
+      padding-top: 2px;
+    }
+
+    .strong {
+      font-weight: bold;
+    }
+
+    .clear {
+      clear: both;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════ -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        ${company.name!''} · ${company.street!''} · ${company.zip!''} ${company.city!''}
+      </div>
+      <div class="footer-right">
+        <span class="page-number"></span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       FIRST PAGE HEADER
+  ═══════════════════════════════════════════════ -->
+  <div class="firstpage-header">
+    <div class="firstpage-logo-row">
+      <img src="${company.urlPreview!''}" alt="Company Logo"></img>
+    </div>
+    <div class="firstpage-title-box">
+      <div class="firstpage-title-inner">
+        <div class="firstpage-title-left">
+          Report zu Reklamation ${returnHead.docNumber!''}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       RUNNING HEADER (page 2+)
+  ═══════════════════════════════════════════════ -->
+  <div class="running-header">
+    <table>
+      <tr>
+        <td style="width: 30%; vertical-align: middle;">
+          <img src="${company.urlPreview!''}" alt="Company Logo" style="max-height: 40px;"></img>
+        </td>
+        <td style="width: 70%; vertical-align: middle;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td class="running-title-left">
+                Report zu Reklamation ${returnHead.docNumber!''}
+              </td>
+              <td class="running-title-right">
+                <span class="page-number"></span>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       CONTENT AREA
+  ═══════════════════════════════════════════════ -->
+  <div class="content-area">
+
+    <!-- ── Stammdaten / Basisdaten ── -->
+    <table class="info-table">
+      <tr>
+        <td class="info-label">Kundennummer:</td>
+        <td class="info-value">${returnHead.customer.code!''}</td>
+        <td style="width: 10%;"></td>
+        <td class="info-label">Rek.-Nr.:</td>
+        <td class="info-value">${returnHead.docNumber!''}</td>
+      </tr>
+      <tr>
+        <td class="info-label">Kundenname:</td>
+        <td class="info-value">${returnHead.customer.translatedName!''}</td>
+        <td></td>
+        <td class="info-label">Rek.-Datum:</td>
+        <td class="info-value">
+          <#if returnHead.docDate?? && returnHead.docDate?has_content>
+            ${returnHead.docDate?date("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")?string("dd.MM.yyyy")}
+          <#else>
+            -
+          </#if>
+        </td>
+      </tr>
+      <tr>
+        <td class="info-label">Erstellt von:</td>
+        <td class="info-value">${returnHead.createdBy.translatedName!''}</td>
+        <td></td>
+        <td class="info-label">Ext. Ref.-Nr.:</td>
+        <td class="info-value">
+          <#if returnHead.externalReferenceNumber?? && returnHead.externalReferenceNumber?has_content>
+            ${returnHead.externalReferenceNumber}
+          <#else>
+            -
+          </#if>
+        </td>
+      </tr>
+      <tr>
+        <td class="info-label">Belegtyp:</td>
+        <td class="info-value">${returnHead.docType.translatedName!''}</td>
+        <td></td>
+        <td class="info-label">Status:</td>
+        <td class="info-value">
+          <#if returnHead.status == 0>
+            Offen
+          <#elseif returnHead.status == 1>
+            In Bearbeitung
+          <#elseif returnHead.status == 2>
+            Abgeschlossen
+          <#else>
+            ${returnHead.status?string}
+          </#if>
+        </td>
+      </tr>
+    </table>
+
+    <hr class="divider"></hr>
+
+    <!-- ── Notizen / Fehlerbeschreibung ── -->
+    <#if returnHead.notes?? && returnHead.notes?has_content>
+      <div class="section-header">Notizen / Fehlerbeschreibung</div>
+      <div class="section-content">
+        <p style="margin: 0; font-size: 11px;">${returnHead.notes}</p>
+      </div>
+    </#if>
+
+    <!-- ── Artikel-Positionen ── -->
+    <div class="section-header" style="margin-top: 16px;">Reklamierte Artikel</div>
+    <div class="section-content" style="padding: 0;">
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th style="width: 4%;">Pos.</th>
+            <th style="width: 8%;">Bild</th>
+            <th style="width: 14%;">Artikelnr.</th>
+            <th style="width: 24%;">Bezeichnung</th>
+            <th style="width: 8%; text-align: center;">Menge</th>
+            <th style="width: 8%; text-align: center;">Rek.-Menge</th>
+            <th style="width: 8%;">Einheit</th>
+            <th style="width: 12%;">Zustand</th>
+            <th style="width: 14%;">Rek.-Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <#list returnHead.items as item>
+            <tr>
+              <td class="text-center">${item_index + 1}</td>
+              <td class="text-center">
+                <#if item.materialImage?? && item.materialImage.urlPreview?? && item.materialImage.urlPreview?has_content>
+                  <img src="${item.materialImage.urlPreview}" alt="${item.shortDescription!''}" class="product-img"></img>
+                <#else>
+                  -
+                </#if>
+              </td>
+              <td>${item.materialSku!''}</td>
+              <td>
+                <span class="strong">${item.shortDescription!''}</span>
+                <#if item.notes?? && item.notes?has_content>
+                  <br></br>
+                  <span style="font-size: 9px; color: #555;">${item.notes}</span>
+                </#if>
+                <#if item.serialNumbers?? && item.serialNumbers?size gt 0>
+                  <br></br>
+                  <span style="font-size: 9px; color: #555;">
+                    S/N:
+                    <#list item.serialNumbers as sn>
+                      ${sn}<#if sn_has_next>, </#if>
+                    </#list>
+                  </span>
+                </#if>
+              </td>
+              <td class="text-center">${item.quantity?string("0.##")}</td>
+              <td class="text-center">${item.returnedQuantity?string("0.##")}</td>
+              <td>${item.unit.translatedName!''}</td>
+              <td>${item.productCondition.translatedName!''}</td>
+              <td>
+                <#if item.returnStatus?? && item.returnStatus.translatedName?? && item.returnStatus.translatedName?has_content>
+                  <span class="status-badge">${item.returnStatus.translatedName}</span>
+                <#else>
+                  -
+                </#if>
+              </td>
+            </tr>
+            <!-- Rückgabegrund Zeile -->
+            <tr>
+              <td></td>
+              <td colspan="8" style="background-color: #f8f8f8; padding: 3px 6px;">
+                <span class="strong" style="font-size: 9px;">Rückgabegrund: </span>
+                <span style="font-size: 9px;">
+                  <#if item.returnReason?? && item.returnReason.translatedName?? && item.returnReason.translatedName?has_content>
+                    ${item.returnReason.translatedName}
+                  <#else>
+                    -
+                  </#if>
+                </span>
+                <#if item.returnChoiceType?? && item.returnChoiceType?has_content>
+                  &nbsp;&nbsp;
+                  <span class="strong" style="font-size: 9px;">Auswahl: </span>
+                  <span style="font-size: 9px;">${item.returnChoiceType}</span>
+                </#if>
+                <#if item.returnChoiceDescription?? && item.returnChoiceDescription?has_content>
+                  &nbsp;&nbsp;
+                  <span style="font-size: 9px;">${item.returnChoiceDescription}</span>
+                </#if>
+              </td>
+            </tr>
+          </#list>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── Abschluss-Bemerkung ── -->
+    <div class="section-header" style="margin-top: 20px;">Abschluss-Bemerkung</div>
+    <div class="section-content" style="min-height: 40px;">
+      <p style="margin: 0; font-size: 11px;">&nbsp;</p>
+    </div>
+
+    <!-- ── Meta / Unterschriften ── -->
+    <table class="meta-table" style="margin-top: 20px;">
+      <tr>
+        <td>
+          <div class="meta-label">berichtet von:</div>
+          <div class="meta-value">${returnHead.createdBy.translatedName!''}</div>
+        </td>
+        <td>
+          <div class="meta-label">Datum</div>
+          <div class="meta-value">
+            <#if returnHead.docDate?? && returnHead.docDate?has_content>
+              ${returnHead.docDate?date("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")?string("dd.MM.yyyy")}
+            <#else>
+              -
+            </#if>
+          </div>
+        </td>
+        <td>
+          <div class="meta-label">abgeschlossen am:</div>
+          <div class="meta-value">&nbsp;</div>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+  <!-- end content-area -->
+
+</body>
+
+</html>
