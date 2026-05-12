@@ -2,8 +2,10 @@
 <html lang="de">
 
 <head>
-  <meta charset="UTF-8"></meta>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+  <meta charset="UTF-8">
+  </meta>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </meta>
   <title>Report zu Reklamation</title>
   <style>
     tr,
@@ -316,22 +318,18 @@
 </head>
 
 <body>
-
   <!-- ═══════════════════════════════════════════════
        FOOTER
   ═══════════════════════════════════════════════ -->
   <div class="footer">
     <div class="footer-inner">
-      <div class="footer-left">
-        ${company.name!''} · ${company.street!''} · ${company.zip!''} ${company.city!''}
+      <div class="footer-left"> ${company.name!''} · ${company.street!''} · ${company.zip!''} ${company.city!''}
       </div>
       <div class="footer-right">
         <span class="page-number"></span>
       </div>
     </div>
   </div>
-
-
   <!-- ═══════════════════════════════════════════════
        FIRST PAGE HEADER
   ═══════════════════════════════════════════════ -->
@@ -341,14 +339,10 @@
     </div>
     <div class="firstpage-title-box">
       <div class="firstpage-title-inner">
-        <div class="firstpage-title-left">
-          Report zu Reklamation ${returnHead.docNumber!''}
-        </div>
+        <div class="firstpage-title-left"> Report zu Reklamation ${returnHead.docNumber!''} </div>
       </div>
     </div>
   </div>
-
-
   <!-- ═══════════════════════════════════════════════
        RUNNING HEADER (page 2+)
   ═══════════════════════════════════════════════ -->
@@ -361,9 +355,7 @@
         <td style="width: 70%; vertical-align: middle;">
           <table style="width: 100%; border-collapse: collapse;">
             <tr>
-              <td class="running-title-left">
-                Report zu Reklamation ${returnHead.docNumber!''}
-              </td>
+              <td class="running-title-left"> Report zu Reklamation ${returnHead.docNumber!''} </td>
               <td class="running-title-right">
                 <span class="page-number"></span>
               </td>
@@ -373,78 +365,50 @@
       </tr>
     </table>
   </div>
-
-
   <!-- ═══════════════════════════════════════════════
        CONTENT AREA
   ═══════════════════════════════════════════════ -->
   <div class="content-area">
-
     <!-- ── Stammdaten / Basisdaten ── -->
     <table class="info-table">
       <tr>
         <td class="info-label">Kundennummer:</td>
-        <td class="info-value">${returnHead.customer.code!''}</td>
+        <td class="info-value">${returnHead.salesHead.customer.code!''}</td>
         <td style="width: 10%;"></td>
         <td class="info-label">Rek.-Nr.:</td>
         <td class="info-value">${returnHead.docNumber!''}</td>
       </tr>
       <tr>
         <td class="info-label">Kundenname:</td>
-        <td class="info-value">${returnHead.customer.translatedName!''}</td>
+        <td class="info-value">${returnHead.salesHead.customer.translatedName!''}</td>
         <td></td>
         <td class="info-label">Rek.-Datum:</td>
-        <td class="info-value">
-          <#if returnHead.docDate?? && returnHead.docDate?has_content>
-            ${returnHead.docDate?date("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")?string("dd.MM.yyyy")}
-          <#else>
-            -
-          </#if>
-        </td>
+        <td class="info-value"> <#if returnHead.docDate?? && returnHead.docDate?has_content> <#else> - </#if> </td>
       </tr>
       <tr>
         <td class="info-label">Erstellt von:</td>
-        <td class="info-value">${returnHead.createdBy.translatedName!''}</td>
+        <td class="info-value">${returnHead.createdBy.firstname!''}</td>
         <td></td>
         <td class="info-label">Ext. Ref.-Nr.:</td>
-        <td class="info-value">
-          <#if returnHead.externalReferenceNumber?? && returnHead.externalReferenceNumber?has_content>
-            ${returnHead.externalReferenceNumber}
-          <#else>
-            -
-          </#if>
-        </td>
+        <td class="info-value"> <#if returnHead.externalReferenceNumber?? && returnHead.externalReferenceNumber?has_content> ${returnHead.externalReferenceNumber} <#else> -
+          </#if> </td>
       </tr>
       <tr>
         <td class="info-label">Belegtyp:</td>
-        <td class="info-value">${returnHead.docType.translatedName!''}</td>
+        <td class="info-value">${returnHead.docType.name!''}</td>
         <td></td>
         <td class="info-label">Status:</td>
-        <td class="info-value">
-          <#if returnHead.status == 0>
-            Offen
-          <#elseif returnHead.status == 1>
-            In Bearbeitung
-          <#elseif returnHead.status == 2>
-            Abgeschlossen
-          <#else>
-            ${returnHead.status?string}
-          </#if>
-        </td>
+        <td class="info-value"> <#if returnHead.status == 0> Offen <#elseif returnHead.status == 1> In Bearbeitung <#elseif returnHead.status == 2>
+          Abgeschlossen <#else> ${returnHead.status?string} </#if> </td>
       </tr>
     </table>
-
-    <hr class="divider"></hr>
-
-    <!-- ── Notizen / Fehlerbeschreibung ── -->
-    <#if returnHead.notes?? && returnHead.notes?has_content>
-      <div class="section-header">Notizen / Fehlerbeschreibung</div>
-      <div class="section-content">
-        <p style="margin: 0; font-size: 11px;">${returnHead.notes}</p>
-      </div>
-    </#if>
-
-    <!-- ── Artikel-Positionen ── -->
+    <hr class="divider">
+    </hr>
+    <!-- ── Notizen / Fehlerbeschreibung ── --> <#if returnHead.notes?? && returnHead.notes?has_content> <div class="section-header">Notizen /
+      Fehlerbeschreibung</div>
+    <div class="section-content">
+      <p style="margin: 0; font-size: 11px;">${returnHead.notes}</p>
+    </div> </#if> <!-- ── Artikel-Positionen ── -->
     <div class="section-header" style="margin-top: 16px;">Reklamierte Artikel</div>
     <div class="section-content" style="padding: 0;">
       <table class="items-table">
@@ -461,96 +425,56 @@
             <th style="width: 14%;">Rek.-Status</th>
           </tr>
         </thead>
-        <tbody>
-          <#list returnHead.items as item>
-            <tr>
-              <td class="text-center">${item_index + 1}</td>
-              <td class="text-center">
-                <#if item.materialImage?? && item.materialImage.urlPreview?? && item.materialImage.urlPreview?has_content>
-                  <img src="${item.materialImage.urlPreview}" alt="${item.shortDescription!''}" class="product-img"></img>
-                <#else>
-                  -
-                </#if>
-              </td>
-              <td>${item.materialSku!''}</td>
-              <td>
-                <span class="strong">${item.shortDescription!''}</span>
-                <#if item.notes?? && item.notes?has_content>
-                  <br></br>
-                  <span style="font-size: 9px; color: #555;">${item.notes}</span>
-                </#if>
-                <#if item.serialNumbers?? && item.serialNumbers?size gt 0>
-                  <br></br>
-                  <span style="font-size: 9px; color: #555;">
-                    S/N:
-                    <#list item.serialNumbers as sn>
-                      ${sn}<#if sn_has_next>, </#if>
-                    </#list>
-                  </span>
-                </#if>
-              </td>
-              <td class="text-center">${item.quantity?string("0.##")}</td>
-              <td class="text-center">${item.returnedQuantity?string("0.##")}</td>
-              <td>${item.unit.translatedName!''}</td>
-              <td>${item.productCondition.translatedName!''}</td>
-              <td>
-                <#if item.returnStatus?? && item.returnStatus.translatedName?? && item.returnStatus.translatedName?has_content>
-                  <span class="status-badge">${item.returnStatus.translatedName}</span>
-                <#else>
-                  -
-                </#if>
-              </td>
-            </tr>
-            <!-- Rückgabegrund Zeile -->
-            <tr>
-              <td></td>
-              <td colspan="8" style="background-color: #f8f8f8; padding: 3px 6px;">
-                <span class="strong" style="font-size: 9px;">Rückgabegrund: </span>
-                <span style="font-size: 9px;">
-                  <#if item.returnReason?? && item.returnReason.translatedName?? && item.returnReason.translatedName?has_content>
-                    ${item.returnReason.translatedName}
-                  <#else>
-                    -
-                  </#if>
-                </span>
-                <#if item.returnChoiceType?? && item.returnChoiceType?has_content>
-                  &nbsp;&nbsp;
-                  <span class="strong" style="font-size: 9px;">Auswahl: </span>
-                  <span style="font-size: 9px;">${item.returnChoiceType}</span>
-                </#if>
-                <#if item.returnChoiceDescription?? && item.returnChoiceDescription?has_content>
-                  &nbsp;&nbsp;
-                  <span style="font-size: 9px;">${item.returnChoiceDescription}</span>
-                </#if>
-              </td>
-            </tr>
-          </#list>
+        <tbody> <#list returnHead.items as item> <tr>
+            <td class="text-center">${item_index + 1}</td>
+            <td class="text-center"> <#if item.materialImage?? && item.materialImage.urlPreview?? && item.materialImage.urlPreview?has_content> <img src="${item.materialImage.urlPreview}" alt="${item.shortDescription!''}"
+                class="product-img"></img> <#else> - </#if> </td>
+            <td>${item.materialSku!''}</td>
+            <td>
+              <span class="strong">${item.shortDescription!''}</span> <#if item.notes?? && item.notes?has_content> <br></br>
+              <span style="font-size: 9px; color: #555;">${item.notes}</span> </#if>
+              <#if item.serialNumbers?? && item.serialNumbers?size gt 0> <br></br>
+              <span style="font-size: 9px; color: #555;"> S/N: <#list item.serialNumbers as sn>
+                ${sn}<#if sn_has_next>, </#if> </#list> </span>
+              </#if>
+            </td>
+            <td class="text-center">${item.quantity?string("0.##")}</td>
+            <td class="text-center">${item.returnedQuantity?string("0.##")}</td>
+            <td>${item.unit.translatedName!''}</td>
+            <td>${item.productCondition!''}</td>
+            <td> <#if item.returnStatus?? && item.returnStatus.translatedName?? && item.returnStatus.translatedName?has_content> <span class="status-badge">${item.returnStatus.translatedName}</span> <#else> -
+              </#if> </td>
+          </tr>
+          <!-- Rückgabegrund Zeile -->
+          <tr>
+            <td></td>
+            <td colspan="8" style="background-color: #f8f8f8; padding: 3px 6px;">
+              <span class="strong" style="font-size: 9px;">Rückgabegrund: </span>
+              <span style="font-size: 9px;"> <#if item.returnReason?? && item.returnReason.translatedName?? && item.returnReason.translatedName?has_content> ${item.returnReason.translatedName} <#else> -
+                </#if> </span> <#if item.returnChoiceType?? && item.returnChoiceType?has_content> &nbsp;&nbsp; <span class="strong"
+                style="font-size: 9px;">Auswahl: </span>
+              <span style="font-size: 9px;">${item.returnChoiceType}</span> </#if> <#if item.returnChoiceDescription?? && item.returnChoiceDescription?has_content>
+              &nbsp;&nbsp; <span style="font-size: 9px;">${item.returnChoiceDescription}</span> </#if>
+            </td>
+          </tr> </#list>
         </tbody>
       </table>
     </div>
-
     <!-- ── Abschluss-Bemerkung ── -->
     <div class="section-header" style="margin-top: 20px;">Abschluss-Bemerkung</div>
     <div class="section-content" style="min-height: 40px;">
       <p style="margin: 0; font-size: 11px;">&nbsp;</p>
     </div>
-
     <!-- ── Meta / Unterschriften ── -->
     <table class="meta-table" style="margin-top: 20px;">
       <tr>
         <td>
           <div class="meta-label">berichtet von:</div>
-          <div class="meta-value">${returnHead.createdBy.translatedName!''}</div>
+          <div class="meta-value">${returnHead.createdBy.firstname!''}</div>
         </td>
         <td>
           <div class="meta-label">Datum</div>
-          <div class="meta-value">
-            <#if returnHead.docDate?? && returnHead.docDate?has_content>
-              ${returnHead.docDate?date("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")?string("dd.MM.yyyy")}
-            <#else>
-              -
-            </#if>
-          </div>
+          <div class="meta-value"> <#if returnHead.docDate?? && returnHead.docDate?has_content> <#else> - </#if> </div>
         </td>
         <td>
           <div class="meta-label">abgeschlossen am:</div>
@@ -558,10 +482,8 @@
         </td>
       </tr>
     </table>
-
   </div>
   <!-- end content-area -->
-
 </body>
 
 </html>
