@@ -89,7 +89,7 @@
 <body>
   <div class="label">
     <!-- oberer Barcode -->
-    <img src="https://barcode.tec-it.com/barcode.ashx?data=${doc_number}" class="barcode-img" />
+    <img src="${barcode(doc_number)}" class="barcode-img" />
     <!-- rechtes M -->
     <div class="right">M</div>
     <!-- Inhalt -->
@@ -103,7 +103,7 @@
     </div>
     <!-- unterer Barcode -->
     <div class="bottom">
-      <img src="https://barcode.tec-it.com/barcode.ashx?data=${doc_number}" class="barcode-img bottom" />
+      <img src="${barcode(doc_number)}" class="barcode-img bottom" />
     </div>
   </div>
 </body>

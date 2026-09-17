@@ -68,10 +68,10 @@
   <h2>Artikelnummer ${item.code}</h2>
   <div class="article-name">${item.name}</div>
 
-    <img src="https://barcode.tec-it.com/barcode.ashx?data=${barcode1Text}" alt="Barcode"
+    <img src="${barcode(barcode1Text)}" alt="Barcode"
               class="barcode-image" />
 
-<img src="https://barcode.tec-it.com/barcode.ashx?data=${barcode2Text}" alt="Barcode"
+<img src="${barcode(barcode2Text)}" alt="Barcode"
               class="barcode-image" />
 
   <table>

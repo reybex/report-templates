@@ -83,7 +83,7 @@
       <div class="label-container">
         <div class="barcode-section">
           <#if stockItem.material.gtin??>
-            <img src="https://barcode.tec-it.com/barcode.ashx?data=${stockItem.material.gtin}" alt="Barcode"
+            <img src="${barcode(stockItem.material.gtin)}" alt="Barcode"
               class="barcode-image" />
           </#if>
         </div>

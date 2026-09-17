@@ -164,7 +164,7 @@
                 <tr>
                   <td class="barcode-cell">
                     <#if stockItem.material.gtin??>
-                      <img src="https://barcode.tec-it.com/barcode.ashx?data=${stockItem.material.gtin}" alt="Barcode"
+                      <img src="${barcode(stockItem.material.gtin)}" alt="Barcode"
                         class="barcode-image" />
                     </#if>
                   </td>
