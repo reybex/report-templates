@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>${contractHead.title!contractHead.docNumber!''}</title>
+  <style>
+    @page { size: A4; margin: 16mm; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Times New Roman", Times, "Liberation Serif", serif;
+      font-size: 11pt;
+      line-height: 1.55;
+      color: #14171c;
+      background: #ffffff;
+    }
+
+    .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px 48px; }
+
+    /* Letterhead */
+    .letterhead {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+      padding-bottom: 14px;
+      border-bottom: 3px solid #0b1f3a;
+      margin-bottom: 4px;
+    }
+    .letterhead .lh-left { display: table-cell; vertical-align: bottom; }
+    .letterhead .lh-right { display: table-cell; vertical-align: bottom; text-align: right; }
+    .lh-company { font-size: 13pt; font-weight: 700; color: #0b1f3a; letter-spacing: 0.02em; }
+    .lh-address { font-family: Arial, sans-serif; font-size: 8.5pt; color: #55606f; margin-top: 3px; }
+    .lh-doctype {
+      font-family: Arial, sans-serif;
+      font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase;
+      color: #0b1f3a; font-weight: 700;
+    }
+    .lh-docnum { font-family: Arial, sans-serif; font-size: 9.5pt; color: #55606f; margin-top: 4px; }
+
+    header.cover {
+      padding: 30px 0 24px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid #c7ccd4;
+      text-align: center;
+    }
+    .cover-title {
+      margin: 0;
+      font-size: 22pt;
+      font-weight: 700;
+      color: #0b1f3a;
+      letter-spacing: 0.01em;
+    }
+    .cover-lead {
+      margin: 12px auto 0;
+      max-width: 520px;
+      font-size: 10.5pt;
+      color: #4b5563;
+    }
+
+    .status-line {
+      margin-top: 16px;
+      font-family: Arial, sans-serif;
+      font-size: 8.5pt;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8a3b1e;
+      font-weight: 700;
+    }
+
+    .cover-parties {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+      margin-top: 26px;
+      border: 1px solid #c7ccd4;
+    }
+    .cover-parties .col { display: table-cell; width: 50%; vertical-align: top; padding: 16px 18px; }
+    .cover-parties .col:first-child { border-right: 1px solid #c7ccd4; }
+    .party-label {
+      font-family: Arial, sans-serif;
+      font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #55606f; font-weight: 700;
+    }
+    .party-name { margin-top: 7px; font-size: 12.5pt; font-weight: 700; color: #0b1f3a; }
+    .party-meta { margin-top: 5px; font-size: 9.5pt; color: #333c47; line-height: 1.5; }
+    .party-divider { margin-top: 9px; padding-top: 9px; border-top: 1px solid #dfe3e8; }
+    .muted { color: #55606f; font-size: 8.8pt; font-family: Arial, sans-serif; }
+
+    .meta-row {
+      display: table; width: 100%; table-layout: fixed;
+      margin-top: 14px; font-family: Arial, sans-serif;
+    }
+    .meta-cell {
+      display: table-cell; text-align: center;
+      border: 1px solid #c7ccd4; border-top: none;
+      padding: 10px 8px;
+      font-size: 9pt;
+    }
+    .meta-cell + .meta-cell { border-left: none; }
+    .meta-cell .k { display: block; font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; color: #55606f; font-weight: 700; margin-bottom: 3px; }
+    .meta-cell .v { display: block; font-weight: 700; color: #0b1f3a; }
+
+    /* Sections */
+    .section { margin-bottom: 38px; }
+    .section-num {
+      display: inline-block;
+      font-family: Arial, sans-serif;
+      font-size: 10pt; font-weight: 700;
+      color: #ffffff; background: #0b1f3a;
+      width: 22px; height: 22px; line-height: 22px; text-align: center;
+      border-radius: 2px;
+      margin-right: 8px;
+    }
+    .section-title {
+      margin: 0 0 4px;
+      font-size: 14.5pt;
+      font-weight: 700;
+      color: #0b1f3a;
+      display: flex;
+      align-items: center;
+    }
+    .section-title-text { vertical-align: middle; }
+    .section-sub {
+      margin: 6px 0 0 30px;
+      font-family: Arial, sans-serif;
+      font-size: 9pt;
+      color: #55606f;
+    }
+    .section-body { margin-left: 30px; }
+
+    .stat-grid { display: table; width: 100%; table-layout: fixed; margin-top: 16px; border-spacing: 0; }
+    .stat { display: table-cell; border: 1px solid #c7ccd4; padding: 14px 16px; }
+    .stat + .stat { border-left: none; }
+    .stat-label {
+      font-family: Arial, sans-serif;
+      font-size: 8.5px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: #55606f; font-weight: 700;
+    }
+    .stat-value { margin-top: 7px; font-size: 15pt; font-weight: 700; color: #0b1f3a; }
+    .stat-hint { margin-top: 3px; font-family: Arial, sans-serif; font-size: 8.5pt; color: #8a93a0; }
+
+    .card { margin-top: 14px; padding: 14px 16px; border-left: 3px solid #0b1f3a; background: #f7f8fa; }
+    .card h3 { margin: 0 0 6px; font-size: 11.5pt; color: #0b1f3a; }
+    .card p { margin: 0; font-size: 10pt; color: #333c47; line-height: 1.55; }
+    .bullets { margin: 12px 0 0; padding: 0 0 0 18px; }
+    .bullets li { font-size: 9.8pt; color: #333c47; margin-bottom: 5px; }
+
+    table.items {
+      width: 100%; border-collapse: collapse; margin-top: 14px;
+      font-size: 9.8pt; font-family: Arial, sans-serif;
+    }
+    table.items th {
+      text-align: left; padding: 8px 10px;
+      background: #0b1f3a; color: #ffffff;
+      font-size: 8.3pt; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;
+    }
+    table.items tr:nth-child(even) td { background: #f2f4f6; }
+    table.items td { padding: 8px 10px; border-bottom: 1px solid #dfe3e8; vertical-align: top; }
+    .text-right { text-align: right; }
+
+    .totals {
+      margin-top: 14px; margin-left: auto; width: 280px;
+      border: 2px solid #0b1f3a;
+      font-family: Arial, sans-serif;
+    }
+    .totals-row { display: table; width: 100%; }
+    .totals-row span {
+      display: table-cell; padding: 10px 14px; font-size: 11pt; font-weight: 700;
+      color: #ffffff; background: #0b1f3a;
+    }
+    .totals-row span:last-child { text-align: right; }
+
+    .notes { white-space: pre-wrap; font-size: 10pt; color: #333c47; line-height: 1.65; }
+    .footer {
+      margin-top: 34px; padding-top: 16px; border-top: 3px solid #0b1f3a;
+      text-align: center; font-family: Arial, sans-serif;
+      font-size: 8pt; letter-spacing: 0.05em; color: #55606f;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+
+    <div class="letterhead">
+      <div class="lh-left">
+        <div class="lh-company">${company.name!''}</div>
+        <div class="lh-address">
+          ${company.street!''}, ${company.zipcode!''} ${company.city!''}
+          <#if company.country??> · ${company.country.name!company.country.code!''}</#if>
+        </div>
+      </div>
+      <div class="lh-right">
+        <div class="lh-doctype">Vertragsdokument</div>
+        <#if contractHead.docNumber?? && contractHead.docNumber?has_content>
+          <div class="lh-docnum">Nr. ${contractHead.docNumber}</div>
+        </#if>
+      </div>
+    </div>
+
+    <header class="cover">
+      <h1 class="cover-title">${contractHead.title!''}</h1>
+      <p class="cover-lead">
+        Verbindliche Vereinbarung zwischen den nachstehenden Parteien zu Leistungsumfang,
+        Laufzeit und kaufmännischen Bedingungen.
+      </p>
+      <div class="status-line">Vertraulich</div>
+
+      <div class="cover-parties">
+        <div class="col">
+          <div class="party-label">Auftragnehmer</div>
+          <div class="party-name">${company.name!''}</div>
+          <div class="party-meta">
+            ${company.street!''}<br />
+            ${company.zipcode!''} ${company.city!''}
+            <#if company.country??>
+              <br />${company.country.name!company.country.code!''}
+            </#if>
+          </div>
+          <#if contractHead.approvedBy??>
+            <div class="party-meta party-divider">
+              ${contractHead.approvedBy.firstname!''} ${contractHead.approvedBy.surname!''}
+            </div>
+          </#if>
+        </div>
+
+        <div class="col">
+          <div class="party-label">Auftraggeber</div>
+          <#if contractHead.counterparty??>
+            <div class="party-name">${contractHead.counterparty.name!''}</div>
+            <div class="party-meta">
+              ${contractHead.counterparty.street!''}<br />
+              ${contractHead.counterparty.zipcode!''} ${contractHead.counterparty.city!''}
+              <#if contractHead.counterparty.country??>
+                <br />${contractHead.counterparty.country.name!contractHead.counterparty.country.code!''}
+              </#if>
+            </div>
+            <#if contractHead.counterpartyEmployee??>
+              <div class="party-meta party-divider">
+                ${contractHead.counterpartyEmployee.firstname!''} ${contractHead.counterpartyEmployee.surname!''}
+                <#if contractHead.counterpartyEmployee.jobTitle?? && contractHead.counterpartyEmployee.jobTitle?has_content>
+                  <br /><span class="muted">${contractHead.counterpartyEmployee.jobTitle}</span>
+                </#if>
+              </div>
+            </#if>
+          <#else>
+            <div class="party-name">—</div>
+          </#if>
+        </div>
+      </div>
+
+      <div class="meta-row">
+        <div class="meta-cell">
+          <span class="k">Gültig ab</span>
+          <span class="v"><#if contractHead.validFrom??>${df(contractHead.validFrom)}<#else>—</#if></span>
+        </div>
+        <div class="meta-cell">
+          <span class="k">Gültig bis</span>
+          <span class="v"><#if contractHead.validUntil??>${df(contractHead.validUntil)}<#else>—</#if></span>
+        </div>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2 class="section-title"><span class="section-num">1</span><span class="section-title-text">Vertragsübersicht</span></h2>
+      <p class="section-sub">Kurzüberblick über Laufzeit und Vertragswert.</p>
+
+      <div class="section-body">
+        <div class="stat-grid">
+          <div class="stat">
+            <div class="stat-label">Vertragswert</div>
+            <div class="stat-value">${nf((contractHead.totalAmount!'0')?number)}</div>
+            <div class="stat-hint">
+              <#if contractHead.currency??>${contractHead.currency.code!contractHead.currency.name!''}</#if>
+              <#if contractHead.contractPeriod??>
+                ·
+                <#if contractHead.contractPeriod?number == 1>monatlich
+                <#elseif contractHead.contractPeriod?number == 2>jährlich
+                <#else>einmalig
+                </#if>
+              </#if>
+            </div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Laufzeit</div>
+            <div class="stat-value">
+              <#if contractHead.validFrom?? && contractHead.validUntil??>
+                ${df(contractHead.validFrom)} – ${df(contractHead.validUntil)}
+              <#elseif contractHead.validFrom??>
+                ab ${df(contractHead.validFrom)}
+              <#else>—</#if>
+            </div>
+            <div class="stat-hint">Vertragszeitraum</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Inhalt dieser Vereinbarung</h3>
+          <p>
+            Vereinbarung zwischen
+            <strong>${company.name!''}</strong>
+            und
+            <strong>${contractHead.counterparty.name!'dem Vertragspartner'}</strong>
+            zum Projekt
+            <strong>${contractHead.title!''}</strong>.
+          </p>
+          <ul class="bullets">
+            <#if salesHead?? || purHead??><li>Verknüpfte Belege im ERP</li></#if>
+            <#if contractHead.notes?? && contractHead.notes?has_content><li>Vertragsbedingungen und Hinweise</li></#if>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <#if linkedDocuments?? && (linkedDocuments?size gt 0)>
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">2</span><span class="section-title-text">Verknüpfte Belege</span></h2>
+        <p class="section-sub">Mit diesem Vertrag verknüpfte ERP-Dokumente.</p>
+        <div class="section-body">
+          <table class="items">
+            <thead>
+              <tr><th>Typ</th><th>Belegnummer</th></tr>
+            </thead>
+            <tbody>
+              <#list linkedDocuments as doc>
+                <tr>
+                  <td>${doc.domain!''}</td>
+                  <td>${doc.documentNumber!''}</td>
+                </tr>
+              </#list>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </#if>
+
+    <#assign hasSalesLines = false />
+    <#if salesHead?? && salesHead.items??>
+      <#list salesHead.items as item>
+        <#if !(item.isDelete!false)>
+          <#assign hasSalesLines = true />
+          <#break />
+        </#if>
+      </#list>
+    </#if>
+
+    <#assign hasPurLines = false />
+    <#if purHead?? && purHead.items??>
+      <#list purHead.items as item>
+        <#if !(item.isDelete!false)>
+          <#assign hasPurLines = true />
+          <#break />
+        </#if>
+      </#list>
+    </#if>
+
+    <#if hasSalesLines || hasPurLines || (contractHead.totalAmount?? && contractHead.totalAmount?has_content)>
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">3</span><span class="section-title-text">Preise und Gebühren</span></h2>
+        <p class="section-sub">Kaufmännische Übersicht.</p>
+
+        <div class="section-body">
+          <#if hasSalesLines>
+            <table class="items">
+              <thead>
+                <tr>
+                  <th>Beschreibung</th>
+                  <th class="text-right">Menge</th>
+                  <th class="text-right">Einzelpreis</th>
+                  <th class="text-right">Betrag</th>
+                </tr>
+              </thead>
+              <tbody>
+                <#list salesHead.items as item>
+                  <#if !(item.isDelete!false)>
+                    <tr>
+                      <td>
+                        ${item.itemCode!''}
+                        <#if item.material?? && item.material.name??>
+                          <br /><span class="muted">${item.material.name}</span>
+                        </#if>
+                      </td>
+                      <td class="text-right">${item.quantity!1}</td>
+                      <td class="text-right">${nf((item.price!0)?number)}</td>
+                      <td class="text-right">${nf((item.totalAmount!0)?number)}</td>
+                    </tr>
+                  </#if>
+                </#list>
+              </tbody>
+            </table>
+          <#elseif hasPurLines>
+            <table class="items">
+              <thead>
+                <tr>
+                  <th>Beschreibung</th>
+                  <th class="text-right">Menge</th>
+                  <th class="text-right">Einzelpreis</th>
+                  <th class="text-right">Betrag</th>
+                </tr>
+              </thead>
+              <tbody>
+                <#list purHead.items as item>
+                  <#if !(item.isDelete!false)>
+                    <tr>
+                      <td>
+                        ${item.itemCode!''}
+                        <#if item.material?? && item.material.name??>
+                          <br /><span class="muted">${item.material.name}</span>
+                        </#if>
+                      </td>
+                      <td class="text-right">${item.quantity!1}</td>
+                      <td class="text-right">${nf((item.price!0)?number)}</td>
+                      <td class="text-right">${nf((item.totalAmount!0)?number)}</td>
+                    </tr>
+                  </#if>
+                </#list>
+              </tbody>
+            </table>
+          </#if>
+
+          <div class="totals">
+            <div class="totals-row">
+              <span>Gesamt</span>
+              <span>${nf((contractHead.totalAmount!'0')?number)}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </#if>
+
+    <#if taxSummary?? && (taxSummary?size gt 0)>
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">4</span><span class="section-title-text">Steuerübersicht</span></h2>
+        <div class="section-body">
+          <table class="items">
+            <thead>
+              <tr>
+                <th>Satz</th>
+                <th>Bezeichnung</th>
+                <th class="text-right">Steuerbetrag</th>
+              </tr>
+            </thead>
+            <tbody>
+              <#list taxSummary as tax>
+                <tr>
+                  <td>${tax.rate!0}%</td>
+                  <td>${tax.name!''}</td>
+                  <td class="text-right">${nf((tax.amount!0)?number)}</td>
+                </tr>
+              </#list>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </#if>
+
+    <section class="section">
+      <h2 class="section-title"><span class="section-num">5</span><span class="section-title-text">Bedingungen und Hinweise</span></h2>
+      <p class="section-sub">Ergänzende vertragliche Informationen.</p>
+      <div class="section-body">
+        <div class="card">
+          <#if contractHead.notes?? && contractHead.notes?has_content>
+            <div class="notes">${contractHead.notes}</div>
+          <#else>
+            <p class="notes">Es liegen keine weiteren Anmerkungen zu diesem Vertrag vor.</p>
+          </#if>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      Vertrag ${contractHead.docNumber!''}
+      <#if contractHead.validUntil??> · Gültig bis ${df(contractHead.validUntil)}</#if>
+      <br />Powered by Reybex · Vertraulich
+    </footer>
+
+  </div>
+</body>
+</html>
