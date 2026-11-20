@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<style type="text/css">
+@page { size: A4; margin: 14mm 10mm 14mm 10mm; }
+body { font-family: Arial, Helvetica, sans-serif; color: #111111; font-size: 10pt; margin: 0; }
+table { width: 100%; border-collapse: collapse; }
+.new-order { page-break-before: always; }
+.top { margin-bottom: 10px; }
+.top td { vertical-align: middle; }
+.title { font-size: 18pt; font-weight: bold; border-bottom: 2px solid #111111; padding: 2px 4px 4px 4px; white-space: nowrap; }
+.docno { font-size: 19pt; font-weight: bold; text-align: center; border-bottom: 2px solid #111111; padding-bottom: 4px; white-space: nowrap; }
+.docbarcode { text-align: center; font-size: 9pt; }
+.docbarcode img { height: 30px; width: 110px; }
+.date { text-align: right; font-size: 17pt; font-weight: bold; white-space: nowrap; border-bottom: 2px solid #111111; padding-bottom: 4px; }
+.info { background-color: #96b3d2; margin: 10px 2px 3px 2px; }
+.info td { padding: 3px 5px; vertical-align: top; }
+.info-label { font-weight: bold; white-space: nowrap; }
+.product-line { padding-top: 3px; }
+.customer { margin: 4px 7px 16px 7px; font-size: 12pt; }
+.operation { margin: 0 0 2px 0; page-break-inside: avoid; }
+.op-head { background-color: #96b3d2; page-break-inside: avoid; }
+.op-head td { padding: 3px 5px; vertical-align: top; }
+.op-code { width: 11%; font-weight: bold; white-space: nowrap; }
+.op-code img { display: block; width: 145px; height: 44px; margin-top: 14px; }
+.op-code-label { font-size: 8.5pt; font-weight: normal; text-align: center; width: 145px; }
+.op-name { width: 43%; font-weight: bold; }
+.op-quantity { width: 16%; text-align: center; white-space: nowrap; font-weight: bold; }
+.op-metrics { width: 30%; }
+.op-metrics table { font-size: 9.5pt; }
+.op-metrics td { padding: 2px 3px; white-space: nowrap; }
+.metric-value { text-align: right; }
+.metric-unit { text-align: right; }
+.op-tools { font-size: 9pt; padding-top: 4px; }
+.op-detail { font-size: 9pt; margin: 2px 5px 6px 5px; }
+.components { margin: 0 0 6px 0; page-break-inside: avoid; }
+.components td { padding: 4px 5px; vertical-align: top; }
+.comp-code { width: 34%; padding-left: 34px; font-weight: bold; white-space: nowrap; }
+.comp-name { width: 48%; }
+.comp-qty { width: 18%; text-align: right; white-space: nowrap; font-weight: bold; }
+.comp-unit { font-size: 8pt; font-weight: normal; }
+</style>
+</head>
+<body>
+<#if items?has_content>
+<#assign lastDoc = "">
+<#assign lastOp = "">
+<#assign docCount = 0>
+<#list items as item>
+  <#assign docNo = (item.prodOrderDocNumber!"")?string>
+  <#assign opNo = ((item.operationConfirmationNumber)!((item.operationItemNumber)!""))?string>
+
+  <#-- ========== Group1: Kopf je Fertigungsauftrag (neue Seite) ========== -->
+  <#if item_index == 0 || docNo != lastDoc>
+    <#assign docCount = docCount + 1>
+    <#assign lastOp = "">
+    <div<#if docCount gt 1> class="new-order"</#if>>
+      <table class="top">
+        <tr>
+          <td style="width:27%" class="title">Production Order</td>
+          <td style="width:17%" class="docno">${docNo}</td>
+          <td style="width:16%" class="docbarcode"><#if docNo?has_content><img src="${barcode(docNo)}" alt="" /><br />${docNo}</#if></td>
+          <td style="width:40%" class="date">Date: ${.now?string("dd.MM.yyyy")}</td>
+        </tr>
+      </table>
+      <table class="info">
+        <tr>
+          <td style="width:16%" class="info-label">Order quantity:</td>
+          <td style="width:23%"><b><#if item.prodOrderQuantity??>${nf(item.prodOrderQuantity)}</#if></b></td>
+          <td style="width:21%">Status : ${item.prodOrderStatus!}</td>
+          <td style="width:18%">Planned Start :</td>
+          <td style="width:22%"><#if item.prodOrderPlanStart??>${df(item.prodOrderPlanStart, 'dd.MM.yyyy')}</#if></td>
+        </tr>
+        <tr>
+          <td colspan="3" class="product-line">${item.mainMaterialMatCode!}&#160;&#160;${item.mainMaterialName!}</td>
+          <td>Planned End :</td>
+          <td><#if item.prodOrderPlanEnd??>${df(item.prodOrderPlanEnd, 'dd.MM.yyyy')}</#if></td>
+        </tr>
+        <#if (item.prodOrder_variantCode!"")?has_content>
+        <tr><td colspan="5" style="padding-left:17px;">${item.prodOrder_variantCode?replace("+", " ")}</td></tr>
+        </#if>
+        <#if (item.prodOrder_attributeCode!"")?has_content>
+        <tr><td colspan="5" style="padding-left:17px;">${item.prodOrder_attributeCode?replace("+", " ")}</td></tr>
+        </#if>
+      </table>
+      <div class="customer">Customer :&#160;${item.customerNo!}&#160;&#160;${item.customerName!}</div>
+    </div>
+    <#assign lastDoc = docNo>
+  </#if>
+
+  <#-- ========== Group2: Arbeitsgang ========== -->
+  <#if opNo?has_content && opNo != lastOp>
+    <div class="operation">
+      <table class="op-head">
+        <tr>
+          <td class="op-code">${opNo}<img src="${barcode(opNo)}" alt="" /><div class="op-code-label">${opNo}</div></td>
+          <td class="op-name">${item.operationDescription!}</td>
+          <td class="op-quantity"><#if item.operationBaseQuantity??>${nf(item.operationBaseQuantity)}</#if>&#160;<span class="comp-unit">${item.operationBaseUnitName!}</span><br />/ Std.</td>
+          <td class="op-metrics">
+            <table>
+              <tr><td>Setup Time:</td><td class="metric-value"><#if item.operationSetupTime??>${nf(item.operationSetupTime)}</#if></td><td class="metric-unit">${item.operationSetupUnitName!}</td></tr>
+              <tr><td>Machine Time:</td><td class="metric-value"><#if item.operationMachineTime??>${nf(item.operationMachineTime)}</#if></td><td class="metric-unit">${item.operationMachineUnitName!}</td></tr>
+              <tr><td>Personal Time:</td><td class="metric-value"><#if item.operationPersonelTime??>${nf(item.operationPersonelTime)}</#if></td><td class="metric-unit">${item.operationPersonelUnitName!}</td></tr>
+            </table>
+          </td>
+        </tr>
+        <#if (item.operationTools!"")?trim?has_content>
+        <tr><td colspan="4" class="op-tools">Werkzeug: ${item.operationTools}</td></tr>
+        </#if>
+        <#if (item.operationToolDescription!"")?trim?has_content>
+        <tr><td colspan="4" class="op-tools">Werkzeugeinstellung: ${item.operationToolDescription}</td></tr>
+        </#if>
+      </table>
+    </div>
+    <#assign lastOp = opNo>
+  </#if>
+
+  <#-- ========== Detail: Komponente ========== -->
+  <#if (item.componentMaterialMatCode!"")?has_content>
+    <table class="components">
+      <tr>
+        <td class="comp-code">${item.componentMaterialMatCode}</td>
+        <td class="comp-name">${item.componentMaterialName!}</td>
+        <td class="comp-qty"><#if item.componentTargetQuantity??>${nf(item.componentTargetQuantity)}</#if>&#160;<span class="comp-unit">${item.componentUnitName!}</span></td>
+      </tr>
+    </table>
+  </#if>
+
+  <#-- ========== Group2-Footer: Detailbeschreibung nach dem letzten Eintrag des Arbeitsgangs ========== -->
+  <#if (item.operationDetailDescription!"")?trim?has_content>
+    <#assign nextOp = "">
+    <#assign nextDoc = "">
+    <#if item?has_next>
+      <#assign nxt = items[item_index + 1]>
+      <#assign nextOp = ((nxt.operationConfirmationNumber)!((nxt.operationItemNumber)!""))?string>
+      <#assign nextDoc = (nxt.prodOrderDocNumber!"")?string>
+    </#if>
+    <#if !item?has_next || nextOp != opNo || nextDoc != docNo>
+      <div class="op-detail">${item.operationDetailDescription}</div>
+    </#if>
+  </#if>
+</#list>
+</#if>
+</body>
+</html>
